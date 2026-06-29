@@ -167,7 +167,7 @@ const PublicSearchPage = () => {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ketik masalah device atau aplikasi Anda di sini..."
+              placeholder="Ketik permasalahan device Anda..."
               className="border-2 border-slate-200 focus:border-slate-900 rounded-lg p-4 text-lg w-full shadow-sm pr-12 transition-all duration-200"
               style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
             />
@@ -186,7 +186,7 @@ const PublicSearchPage = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
               </span>
-              ✨ Pencarian Pintar (Gemini AI) Aktif - Paham bahasa awam Anda
+              ✨ Pencarian berbasis AI
             </span>
           </div>
         </form>
