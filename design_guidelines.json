@@ -1,0 +1,63 @@
+{
+  "theme": "Light",
+  "archetype": "4 (Swiss & High-Contrast)",
+  "mood": "Minimalist, Clean, Accessible, Functional, Direct",
+  "colors": {
+    "primary": "#0F172A",
+    "primary_description": "Navy Blue - Use for text, headers, and primary structural elements.",
+    "secondary": "#4ADE80",
+    "secondary_description": "Light Green - Use for primary actions, success states, and key highlights.",
+    "background": "#FFFFFF",
+    "surface": "#F8FAFC",
+    "text_primary": "#0F172A",
+    "text_secondary": "#475569",
+    "border": "#E2E8F0",
+    "danger": "#EF4444"
+  },
+  "typography": {
+    "fonts": {
+      "heading": "Manrope",
+      "body": "IBM Plex Sans"
+    },
+    "scales": {
+      "h1": "text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900",
+      "h2": "text-2xl md:text-3xl font-bold tracking-tight text-slate-900",
+      "h3": "text-xl font-semibold text-slate-900",
+      "body": "text-base leading-relaxed text-slate-700",
+      "small": "text-sm text-slate-500",
+      "label": "text-xs font-semibold uppercase tracking-wider text-slate-500"
+    }
+  },
+  "layout_and_spacing": {
+    "container": "max-w-4xl mx-auto px-6",
+    "spacing_system": "Generous spacing. Use p-6 or p-8 for cards and containers. gap-8 for lists.",
+    "alignment": "Center alignment for the main public search hero. Left alignment for search results and tables for readability.",
+    "borders_and_radius": "Subtle borders (border border-slate-200), minimal border radius (rounded-md or rounded-lg)."
+  },
+  "components": {
+    "search_bar": "Large, prominent, clean. border-2 border-slate-200 focus:border-slate-900 rounded-lg p-4 text-lg w-full shadow-sm.",
+    "search_results_list": "Loose spacing (gap-6), clean list layout. Text links highly readable, text-slate-900 hover:text-green-500 transition-colors.",
+    "pdf_viewer": "Minimalist inline viewer. border border-slate-200 rounded-lg overflow-hidden bg-slate-50. Include high-contrast 'Download PDF' button nearby.",
+    "admin_login_button": "Small, neat, top-right corner. variant='outline' or clean text button.",
+    "admin_dashboard_table": "Simple Shadcn table. border-b for rows, plenty of padding (py-4). Delete button must be a distinct red (bg-red-500 text-white hover:bg-red-600).",
+    "upload_form": "Compact layout. Shadcn forms, Select, stylized drag-and-drop zone (border-2 border-dashed border-slate-300 rounded-lg p-12 text-center hover:bg-slate-50)."
+  },
+  "motion_and_interaction": {
+    "hover_states": "Buttons darken slightly on hover. Search results get a subtle color shift.",
+    "transitions": "transition-all duration-200 ease-in-out for all interactive elements.",
+    "focus_states": "focus:ring-2 focus:ring-green-400 focus:outline-none to ensure accessibility."
+  },
+  "assets_and_media": {
+    "icons": "lucide-react for minimal, functional icons.",
+    "image_urls": {}
+  },
+  "instructions_to_main_agent": [
+    "Use ONLY .js files (no .tsx). Configure components accordingly.",
+    "Ensure the entire app uses Tailwind classes corresponding to the color palette.",
+    "The public page must NOT have a sidebar, just a clean centered layout.",
+    "Implement the PDF Viewer inline. Ensure it renders within the same page.",
+    "All interactive elements MUST have data-testid attributes (e.g., data-testid='search-input', data-testid='download-btn', data-testid='delete-btn').",
+    "Admin routes should be protected. Form should use Shadcn Select and simple input.",
+    "No illustrations or complex graphics. Rely solely on typography, space, and simple geometry."
+  ]
+}
