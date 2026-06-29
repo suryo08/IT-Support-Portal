@@ -151,13 +151,11 @@ const PublicSearchPage = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-4" style={{ fontFamily: 'Manrope, sans-serif' }}>
+        <div className="text-center mb-12 flex flex-col items-center">
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase" style={{ fontFamily: 'Manrope, sans-serif', letterSpacing: '0.05em' }}>
             IT Support Portal
           </h1>
-          <p className="text-base leading-relaxed text-slate-700" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-            Cari solusi untuk masalah device atau aplikasi Anda
-          </p>
+          <div className="h-1.5 w-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mt-4 shadow-sm"></div>
         </div>
 
         <form onSubmit={handleSearch} className="mb-6">
