@@ -44,7 +44,8 @@ export async function POST(req) {
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.role
+      role: user.role,
+      status: user.status
     });
 
     // Set cookies

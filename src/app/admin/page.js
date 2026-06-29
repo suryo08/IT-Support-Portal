@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
 import { Upload, Trash2, LogOut, FileText, Edit, X, TrendingUp, Layers, Clock } from 'lucide-react';
 import axios from 'axios';
@@ -213,9 +214,24 @@ const AdminDashboard = () => {
               className="h-10 object-contain"
               style={{ maxWidth: '180px' }}
             />
+            <div className="h-6 w-px bg-slate-200 mx-2"></div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Admin Dashboard
             </h1>
+            <nav className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-lg ml-6">
+              <Link href="/admin">
+                <Button variant="ghost" size="sm" className="bg-white text-slate-900 shadow-sm hover:bg-white font-semibold">
+                  Tutorials
+                </Button>
+              </Link>
+              {user?.role === 'super_admin' && (
+                <Link href="/admin/users">
+                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium">
+                    User Management
+                  </Button>
+                </Link>
+              )}
+            </nav>
           </div>
           <div className="flex items-center gap-4">
             <span className="text-sm text-slate-500" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>

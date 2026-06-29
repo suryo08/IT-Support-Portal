@@ -9,7 +9,7 @@ const ProtectedRoute = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== 'admin')) {
+    if (!loading && (!user || !['admin', 'super_admin'].includes(user.role) || user.status !== 'approved')) {
       router.push('/login');
     }
   }, [user, loading, router]);
@@ -22,7 +22,7 @@ const ProtectedRoute = ({ children }) => {
     );
   }
 
-  if (!user || user.role !== 'admin') {
+  if (!user || !['admin', 'super_admin'].includes(user.role) || user.status !== 'approved') {
     return null; // Return null while redirecting
   }
 

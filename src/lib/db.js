@@ -91,16 +91,51 @@ export async function initDb() {
       const adminId = 'default-admin-id';
       await client.query(`
         INSERT INTO users (id, email, password_hash, name, role, status, approved_at)
-        VALUES ($1, $2, $3, $4, 'admin', 'approved', NOW())
+        VALUES ($1, $2, $3, $4, 'super_admin', 'approved', NOW())
       `, [adminId, adminEmail, hashed, adminName]);
-      console.log(`Default admin account seeded: ${adminEmail}`);
+      console.log(`Default admin account seeded as super_admin: ${adminEmail}`);
     } else {
       const admin = checkAdmin.rows[0];
+      if (admin.role !== 'super_admin') {
+        await client.query('UPDATE users SET role = $1 WHERE email = $2', ['super_admin', adminEmail]);
+        console.log(`Upgraded default admin account role to super_admin`);
+      }
       const match = await bcrypt.compare(adminPassword, admin.password_hash);
       if (!match) {
         const hashed = await bcrypt.hash(adminPassword, 10);
         await client.query('UPDATE users SET password_hash = $1 WHERE email = $2', [hashed, adminEmail]);
         console.log('Admin password updated based on configuration');
+      }
+    }
+
+    // Seed Gilang Suryo as super_admin
+    const gilangEmail = 'gilang.suryo@chitraparatama.co.id';
+    const gilangPassword = 'gilang123';
+    const gilangName = 'Gilang Suryo';
+
+    const checkGilang = await client.query('SELECT * FROM users WHERE email = $1', [gilangEmail]);
+    if (checkGilang.rows.length === 0) {
+      const hashed = await bcrypt.hash(gilangPassword, 10);
+      const gilangId = 'gilang-suryo-id';
+      await client.query(`
+        INSERT INTO users (id, email, password_hash, name, role, status, approved_at)
+        VALUES ($1, $2, $3, $4, 'super_admin', 'approved', NOW())
+      `, [gilangId, gilangEmail, hashed, gilangName]);
+      console.log(`Seeded requested super_admin: ${gilangEmail}`);
+    } else {
+      const gilang = checkGilang.rows[0];
+      if (gilang.role !== 'super_admin' || gilang.status !== 'approved') {
+        await client.query(
+          "UPDATE users SET role = 'super_admin', status = 'approved', approved_at = NOW() WHERE email = $1",
+          [gilangEmail]
+        );
+        console.log(`Ensured super_admin role and approved status for: ${gilangEmail}`);
+      }
+      const match = await bcrypt.compare(gilangPassword, gilang.password_hash);
+      if (!match) {
+        const hashed = await bcrypt.hash(gilangPassword, 10);
+        await client.query('UPDATE users SET password_hash = $1 WHERE email = $2', [hashed, gilangEmail]);
+        console.log(`Updated password for: ${gilangEmail}`);
       }
     }
 

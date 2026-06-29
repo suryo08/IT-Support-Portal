@@ -5,8 +5,8 @@ import { query } from '@/lib/db';
 export async function GET(req) {
   try {
     const user = await getCurrentUser(req);
-    if (!user || user.role !== 'admin' || user.status !== 'approved') {
-      return NextResponse.json({ detail: 'Admin access required' }, { status: 403 });
+    if (!user || user.role !== 'super_admin' || user.status !== 'approved') {
+      return NextResponse.json({ detail: 'Super Admin access required' }, { status: 403 });
     }
 
     const res = await query(`
