@@ -217,7 +217,7 @@ const AdminDashboard = () => {
               />
             </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Admin Dashboard
             </h1>
             <nav className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-lg ml-6">
@@ -296,7 +296,7 @@ const AdminDashboard = () => {
 
         {/* Upload Form */}
         <div className="bg-slate-50 border border-slate-200 rounded-lg p-8 mb-8">
-          <h2 className="text-xl font-semibold text-slate-900 mb-6" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          <h2 className="text-xl font-semibold text-slate-900 mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Tambah Tutorial Baru
           </h2>
           
@@ -406,7 +406,7 @@ const AdminDashboard = () => {
         {/* Tutorials Table */}
         <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
           <div className="p-6 border-b border-slate-200 flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            <h2 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Daftar Tutorial ({filteredTutorials.length})
             </h2>
             

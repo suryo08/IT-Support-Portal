@@ -152,7 +152,7 @@ const PublicSearchPage = () => {
 
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="text-center mb-12 flex flex-col items-center">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase" style={{ fontFamily: 'Manrope, sans-serif', letterSpacing: '0.05em' }}>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase" style={{ fontFamily: 'Outfit, sans-serif', letterSpacing: '0.05em' }}>
             IT Support Portal
           </h1>
           <div className="h-1.5 w-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mt-4 shadow-sm"></div>
@@ -215,7 +215,7 @@ const PublicSearchPage = () => {
 
         {results.length > 0 && (
           <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-6" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
               {selectedCategory === 'all' ? 'Semua Tutorial' : `Tutorial ${selectedCategory}`} ({results.length})
             </h2>
             {results.map((result) => (
@@ -231,7 +231,7 @@ const PublicSearchPage = () => {
                       data-testid={`result-title-${result.id}`}
                       onClick={() => handleOpenPdf(result)}
                       className="text-xl font-semibold text-slate-900 hover:text-green-500 transition-colors duration-200 text-left"
-                      style={{ fontFamily: 'Manrope, sans-serif' }}
+                      style={{ fontFamily: 'Outfit, sans-serif' }}
                     >
                       {result.title}
                     </button>
@@ -282,7 +282,7 @@ const PublicSearchPage = () => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="border-b border-slate-200 p-4 flex items-center justify-between flex-shrink-0">
-              <h3 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
+              <h3 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
                 {selectedPdf.title}
               </h3>
               <div className="flex items-center gap-2">

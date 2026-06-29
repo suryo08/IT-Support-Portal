@@ -238,7 +238,7 @@ const UserManagement = () => {
               />
             </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
-            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
+            <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Admin Dashboard
             </h1>
             <nav className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-lg ml-6">
@@ -273,7 +273,7 @@ const UserManagement = () => {
       <div className="max-w-7xl mx-auto px-6 py-8">
         {/* Page title and description */}
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          <h2 className="text-2xl font-bold text-slate-900 tracking-tight" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Manajemen Pengguna & RBAC
           </h2>
           <p className="text-slate-500 text-sm mt-1" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>

@@ -43,7 +43,7 @@ const AdminLoginPage = () => {
               style={{ maxWidth: '200px' }}
             />
           </Link>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-2" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Admin Login
           </h1>
           <p className="text-base leading-relaxed text-slate-700" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
@@ -95,7 +95,7 @@ const AdminLoginPage = () => {
             type="submit"
             disabled={loading}
             className="w-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 py-6 text-lg font-semibold"
-            style={{ fontFamily: 'Manrope, sans-serif' }}
+            style={{ fontFamily: 'Outfit, sans-serif' }}
           >
             {loading ? 'Loading...' : 'Login'}
           </Button>
