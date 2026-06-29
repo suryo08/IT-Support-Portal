@@ -208,12 +208,14 @@ const AdminDashboard = () => {
       <div className="border-b border-slate-200 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <img 
-              src="/logo.png" 
-              alt="Chitra Paratama" 
-              className="h-10 object-contain"
-              style={{ maxWidth: '180px' }}
-            />
+            <Link href="/">
+              <img 
+                src="/logo.png" 
+                alt="Chitra Paratama" 
+                className="h-10 object-contain cursor-pointer"
+                style={{ maxWidth: '180px' }}
+              />
+            </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Manrope, sans-serif' }}>
               Admin Dashboard

@@ -35,12 +35,14 @@ const AdminLoginPage = () => {
     <div className="min-h-screen bg-white flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <img 
-            src="/logo.png" 
-            alt="Chitra Paratama" 
-            className="h-12 object-contain mx-auto mb-6"
-            style={{ maxWidth: '200px' }}
-          />
+          <Link href="/">
+            <img 
+              src="/logo.png" 
+              alt="Chitra Paratama" 
+              className="h-12 object-contain mx-auto mb-6 cursor-pointer"
+              style={{ maxWidth: '200px' }}
+            />
+          </Link>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
             Admin Login
           </h1>
