@@ -104,14 +104,6 @@ const PublicSearchPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
-        <Link href="/">
-          <img 
-            src="/logo.png" 
-            alt="Chitra Paratama" 
-            className="h-10 object-contain cursor-pointer"
-            style={{ maxWidth: '180px' }}
-          />
-        </Link>
         {user && ['admin', 'super_admin'].includes(user.role) && user.status === 'approved' ? (
           <div className="flex items-center gap-3">
             <Link href="/admin">
@@ -152,10 +144,21 @@ const PublicSearchPage = () => {
 
       <div className="max-w-4xl mx-auto px-6 py-16">
         <div className="text-center mb-12 flex flex-col items-center">
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase" style={{ fontFamily: 'Outfit, sans-serif', letterSpacing: '0.05em' }}>
-            IT Support Portal
-          </h1>
-          <div className="h-1.5 w-24 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full mt-4 shadow-sm"></div>
+          <img
+            src="/logo.png"
+            alt="Fix IT"
+            className="h-44 md:h-56 w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,35,83,0.18)]"
+          />
+          <div className="mt-4 text-center">
+            <p className="text-xl md:text-2xl font-semibold tracking-wide text-brand-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
+              Your Guide to <span className="text-brand-500">Solving IT Problems</span>
+            </p>
+            <div className="mt-4 flex items-center justify-center gap-2">
+              <div className="h-px w-10 bg-gradient-to-r from-transparent to-brand-300"></div>
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
+              <div className="h-px w-10 bg-gradient-to-l from-transparent to-brand-300"></div>
+            </div>
+          </div>
         </div>
 
         <form onSubmit={handleSearch} className="mb-6">
@@ -173,18 +176,18 @@ const PublicSearchPage = () => {
               data-testid="search-button"
               type="submit"
               disabled={loading || !query.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-green-500 text-white hover:bg-green-600 transition-all duration-200"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200"
             >
               {loading ? 'Mencari...' : <Search className="w-5 h-5" />}
             </Button>
           </div>
           <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
-            <span className="flex items-center gap-1.5 text-green-600 font-semibold bg-green-50 px-2 py-1 rounded">
+            <span className="flex items-center gap-1.5 text-brand-600 font-semibold bg-brand-50 px-2 py-1 rounded">
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
               </span>
-              ✨ Pencarian berbasis AI
+              Pencarian Berbasis AI
             </span>
           </div>
         </form>
@@ -196,7 +199,7 @@ const PublicSearchPage = () => {
             data-testid="category-all"
             onClick={() => handleCategoryChange('all')}
             variant={selectedCategory === 'all' ? 'default' : 'outline'}
-            className={selectedCategory === 'all' ? 'bg-green-500 text-white hover:bg-green-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}
+            className={selectedCategory === 'all' ? 'bg-brand-500 text-white hover:bg-brand-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}
           >
             Semua
           </Button>
@@ -206,7 +209,7 @@ const PublicSearchPage = () => {
               data-testid={`category-${cat}`}
               onClick={() => handleCategoryChange(cat)}
               variant={selectedCategory === cat ? 'default' : 'outline'}
-              className={selectedCategory === cat ? 'bg-green-500 text-white hover:bg-green-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}
+              className={selectedCategory === cat ? 'bg-brand-500 text-white hover:bg-brand-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}
             >
               {cat}
             </Button>
@@ -225,12 +228,12 @@ const PublicSearchPage = () => {
                 className="border border-slate-200 rounded-lg p-6 hover:bg-slate-50 transition-all duration-200"
               >
                 <div className="flex items-start gap-4">
-                  <FileText className="w-6 h-6 text-green-500 mt-1 flex-shrink-0" />
+                  <FileText className="w-6 h-6 text-brand-500 mt-1 flex-shrink-0" />
                   <div className="flex-1">
                     <button
                       data-testid={`result-title-${result.id}`}
                       onClick={() => handleOpenPdf(result)}
-                      className="text-xl font-semibold text-slate-900 hover:text-green-500 transition-colors duration-200 text-left"
+                      className="text-xl font-semibold text-slate-900 hover:text-brand-500 transition-colors duration-200 text-left"
                       style={{ fontFamily: 'Outfit, sans-serif' }}
                     >
                       {result.title}
@@ -243,7 +246,7 @@ const PublicSearchPage = () => {
                     </p>
                     {result.score && result.score > 0 && result.score !== 0.5 && (
                       <div className="flex items-center gap-1.5 mt-3">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-green-100 text-green-800 border border-green-200">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-100 text-brand-800 border border-brand-200">
                           ✨ AI Match: {(result.score * 100).toFixed(0)}%
                         </span>
                       </div>
@@ -289,7 +292,7 @@ const PublicSearchPage = () => {
                 <Button
                   data-testid="download-pdf-button"
                   onClick={() => handleDownloadPdf(selectedPdf.pdf_path, selectedPdf.title)}
-                  className="bg-green-500 text-white hover:bg-green-600 transition-all duration-200"
+                  className="bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200"
                 >
                   <Download className="w-4 h-4 mr-2" />
                   Download PDF

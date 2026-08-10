@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -208,12 +208,11 @@ const AdminDashboard = () => {
       <div className="border-b border-slate-200 bg-slate-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/">
-              <img 
-                src="/logo.png" 
-                alt="Chitra Paratama" 
-                className="h-10 object-contain cursor-pointer"
-                style={{ maxWidth: '180px' }}
+            <Link href="/" className="flex items-center cursor-pointer">
+              <img
+                src="/logo.png"
+                alt="Fix IT"
+                className="h-12 md:h-14 w-auto object-contain"
               />
             </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
@@ -256,14 +255,14 @@ const AdminDashboard = () => {
         {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 border border-green-200 rounded-lg p-6">
+            <div className="bg-gradient-to-br from-brand-50 to-brand-100 border border-brand-200 rounded-lg p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-green-600 uppercase tracking-wider">Total Tutorial</p>
-                  <p className="text-3xl font-bold text-green-900 mt-2">{stats.total_tutorials}</p>
+                  <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">Total Tutorial</p>
+                  <p className="text-3xl font-bold text-brand-900 mt-2">{stats.total_tutorials}</p>
                 </div>
-                <div className="bg-green-200 rounded-full p-3">
-                  <Layers className="w-8 h-8 text-green-700" />
+                <div className="bg-brand-200 rounded-full p-3">
+                  <Layers className="w-8 h-8 text-brand-700" />
                 </div>
               </div>
             </div>
@@ -311,7 +310,7 @@ const AdminDashboard = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="Contoh: Cara Reset Password Email"
-                className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none"
+                className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-brand-400 focus:outline-none"
                 required
               />
             </div>
@@ -321,7 +320,7 @@ const AdminDashboard = () => {
                 Kategori
               </Label>
               <Select value={category} onValueChange={setCategory} required>
-                <SelectTrigger data-testid="category-select" className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none">
+                <SelectTrigger data-testid="category-select" className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-brand-400 focus:outline-none">
                   <SelectValue placeholder="Pilih kategori" />
                 </SelectTrigger>
                 <SelectContent>
@@ -345,7 +344,7 @@ const AdminDashboard = () => {
                 onChange={(e) => setContent(e.target.value)}
                 placeholder="Ringkasan singkat tentang tutorial ini..."
                 rows={4}
-                className="mt-2 w-full border border-slate-200 rounded-md p-3 focus:ring-2 focus:ring-green-400 focus:outline-none"
+                className="mt-2 w-full border border-slate-200 rounded-md p-3 focus:ring-2 focus:ring-brand-400 focus:outline-none"
                 style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
                 required
               />
@@ -367,7 +366,7 @@ const AdminDashboard = () => {
                 />
                 <label
                   htmlFor="pdf-upload"
-                  className="cursor-pointer text-green-500 hover:text-green-600 font-semibold"
+                  className="cursor-pointer text-brand-500 hover:text-brand-600 font-semibold"
                 >
                   Klik untuk upload atau drag & drop
                 </label>
@@ -387,7 +386,7 @@ const AdminDashboard = () => {
             )}
 
             {uploadSuccess && (
-              <div data-testid="upload-success" className="text-green-600 text-sm">
+              <div data-testid="upload-success" className="text-brand-600 text-sm">
                 {uploadSuccess}
               </div>
             )}
@@ -396,7 +395,7 @@ const AdminDashboard = () => {
               data-testid="submit-tutorial-button"
               type="submit"
               disabled={loading}
-              className="w-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 py-6 text-lg font-semibold"
+              className="w-full bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200 py-6 text-lg font-semibold"
             >
               {loading ? 'Uploading...' : 'Tambah Tutorial'}
             </Button>
@@ -448,7 +447,7 @@ const AdminDashboard = () => {
                     <TableRow key={tutorial.id} data-testid={`tutorial-row-${tutorial.id}`}>
                       <TableCell className="py-4">
                         <div className="flex items-center gap-2">
-                          <FileText className="w-4 h-4 text-green-500" />
+                          <FileText className="w-4 h-4 text-brand-500" />
                           <span className="font-semibold text-slate-900">{tutorial.title}</span>
                         </div>
                       </TableCell>
@@ -551,7 +550,7 @@ const AdminDashboard = () => {
                 >
                   {editPdfFile ? (
                     <div>
-                      <div className="text-green-600 font-semibold mb-2 flex items-center justify-center gap-2">
+                      <div className="text-brand-600 font-semibold mb-2 flex items-center justify-center gap-2">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -587,7 +586,7 @@ const AdminDashboard = () => {
                     onClick={() => setEditPdfFile(null)}
                     className="mt-4 text-sm text-red-600 hover:text-red-700 font-medium"
                   >
-                    × Hapus File
+                    Ã— Hapus File
                   </button>
                 )}
               </div>
@@ -610,7 +609,7 @@ const AdminDashboard = () => {
               <Button
                 onClick={handleUpdateTutorial}
                 disabled={loading}
-                className="bg-green-500 text-white hover:bg-green-600"
+                className="bg-brand-500 text-white hover:bg-brand-600"
               >
                 {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
               </Button>

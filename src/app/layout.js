@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "IT Support Portal",
-  description: "IT Support Portal - Find solutions to your IT issues",
+  title: "Fix IT",
+  description: "Fix IT - Find solutions to your IT issues",
 };
 
 export default function RootLayout({ children }) {

@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -178,7 +178,7 @@ const UserManagement = () => {
     switch (status) {
       case 'approved':
         return (
-          <Badge variant="default" className="bg-emerald-500 hover:bg-emerald-600 text-white border-0 flex items-center gap-1 w-fit">
+          <Badge variant="default" className="bg-brand-600 hover:bg-brand-600 text-white border-0 flex items-center gap-1 w-fit">
             <CheckCircle className="w-3.5 h-3.5" />
             Approved
           </Badge>
@@ -229,12 +229,11 @@ const UserManagement = () => {
       <div className="border-b border-slate-200 bg-white shadow-sm">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link href="/">
-              <img 
-                src="/logo.png" 
-                alt="Chitra Paratama" 
-                className="h-10 object-contain cursor-pointer"
-                style={{ maxWidth: '180px' }}
+            <Link href="/" className="flex items-center cursor-pointer">
+              <img
+                src="/logo.png"
+                alt="Fix IT"
+                className="h-12 md:h-14 w-auto object-contain"
               />
             </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
@@ -313,7 +312,7 @@ const UserManagement = () => {
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Admin Disetujui</p>
                 <p className="text-3xl font-bold text-slate-950 mt-2">{loading ? '...' : stats.approved}</p>
               </div>
-              <div className="bg-emerald-50 text-emerald-600 rounded-full p-3.5">
+              <div className="bg-brand-50 text-brand-600 rounded-full p-3.5">
                 <UserCheck className="w-6 h-6" />
               </div>
             </CardContent>
@@ -364,7 +363,7 @@ const UserManagement = () => {
                     placeholder="Cari nama atau email..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 border-slate-200 focus-visible:ring-emerald-500"
+                    className="pl-9 border-slate-200 focus-visible:ring-brand-600"
                   />
                 </div>
               </div>
@@ -430,7 +429,7 @@ const UserManagement = () => {
                                 onClick={() => handleStatusChange(u.id, true)}
                                 disabled={actionLoading}
                                 size="sm"
-                                className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold flex items-center gap-1 border-0"
+                                className="bg-brand-600 hover:bg-brand-600 text-white font-semibold flex items-center gap-1 border-0"
                               >
                                 Setujui
                               </Button>
@@ -596,7 +595,7 @@ const UserManagement = () => {
                                 onClick={() => handleStatusChange(u.id, true)}
                                 disabled={actionLoading}
                                 size="sm"
-                                className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold flex items-center gap-1 border-0"
+                                className="bg-brand-600 hover:bg-brand-600 text-white font-semibold flex items-center gap-1 border-0"
                               >
                                 Pulihkan / Approve
                               </Button>
@@ -690,7 +689,7 @@ const UserManagement = () => {
                                         onClick={() => handleStatusChange(u.id, true)}
                                         disabled={actionLoading}
                                         size="sm"
-                                        className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold border-0"
+                                        className="bg-brand-600 hover:bg-brand-600 text-white font-semibold border-0"
                                       >
                                         Setujui
                                       </Button>
@@ -721,7 +720,7 @@ const UserManagement = () => {
                                       onClick={() => handleStatusChange(u.id, true)}
                                       disabled={actionLoading}
                                       size="sm"
-                                      className="bg-emerald-500 hover:bg-emerald-600 text-white font-semibold border-0"
+                                      className="bg-brand-600 hover:bg-brand-600 text-white font-semibold border-0"
                                     >
                                       Setujui / Pulihkan
                                     </Button>

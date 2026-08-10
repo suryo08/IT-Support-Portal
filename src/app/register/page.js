@@ -37,19 +37,18 @@ const AdminRegisterPage = () => {
     <div className="min-h-screen bg-white flex items-center justify-center px-6">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <Link href="/">
-            <img 
-              src="/logo.png" 
-              alt="Chitra Paratama" 
-              className="h-12 object-contain mx-auto mb-6 cursor-pointer"
-              style={{ maxWidth: '200px' }}
+          <Link href="/" className="inline-flex items-center justify-center mb-6 cursor-pointer">
+            <img
+              src="/logo.png"
+              alt="Fix IT"
+              className="h-32 md:h-40 w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,35,83,0.18)]"
             />
           </Link>
           <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-slate-900 mb-2" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Registrasi Admin
           </h1>
           <p className="text-base leading-relaxed text-slate-700" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-            Portal IT Support - Buat Akun Admin Baru
+            Buat Akun Admin Baru
           </p>
         </div>
 
@@ -65,7 +64,7 @@ const AdminRegisterPage = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="John Doe"
-              className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none"
+              className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-brand-400 focus:outline-none"
               required
             />
           </div>
@@ -81,7 +80,7 @@ const AdminRegisterPage = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="john@company.com"
-              className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none"
+              className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-brand-400 focus:outline-none"
               required
             />
           </div>
@@ -96,8 +95,8 @@ const AdminRegisterPage = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="••••••••"
-              className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-green-400 focus:outline-none"
+              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-brand-400 focus:outline-none"
               required
               minLength={8}
             />
@@ -114,7 +113,7 @@ const AdminRegisterPage = () => {
             data-testid="register-submit-button"
             type="submit"
             disabled={loading}
-            className="w-full bg-green-500 text-white hover:bg-green-600 transition-all duration-200 py-6 text-lg font-semibold"
+            className="w-full bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200 py-6 text-lg font-semibold"
             style={{ fontFamily: 'Outfit, sans-serif' }}
           >
             {loading ? 'Loading...' : 'Daftar'}
@@ -124,16 +123,16 @@ const AdminRegisterPage = () => {
         <div className="mt-6 text-center space-y-2">
           <p className="text-sm text-slate-600">
             Sudah punya akun?{' '}
-            <Link href="/login" className="text-green-500 hover:text-green-600 font-semibold">
+            <Link href="/login" className="text-brand-500 hover:text-brand-600 font-semibold">
               Login di sini
             </Link>
           </p>
           <Link
             href="/"
-            className="text-sm text-slate-700 hover:text-green-500 transition-colors duration-200 block"
+            className="text-sm text-slate-700 hover:text-brand-500 transition-colors duration-200 block"
             style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
           >
-            ← Kembali ke Halaman Utama
+            Halaman Utama
           </Link>
         </div>
       </div>
