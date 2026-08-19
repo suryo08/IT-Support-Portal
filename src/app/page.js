@@ -104,6 +104,13 @@ const PublicSearchPage = () => {
   return (
     <div className="min-h-screen bg-white">
       <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+        <Link href="/" className="flex items-center">
+          <img
+            src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
+            alt="PT. Chitra Paratama"
+            className="h-8 md:h-10 w-auto object-contain"
+          />
+        </Link>
         {user && ['admin', 'super_admin'].includes(user.role) && user.status === 'approved' ? (
           <div className="flex items-center gap-3">
             <Link href="/admin">
