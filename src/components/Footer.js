@@ -40,7 +40,7 @@ const socialLinks = [
 const Footer = () => {
   return (
     <footer className="border-t border-brand-800 bg-brand-900">
-      <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between gap-8">
+      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row justify-between gap-8">
         <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
             <img
@@ -66,28 +66,29 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="flex flex-col items-start md:items-end gap-4">
-          <div className="flex flex-col gap-3">
-            {socialLinks.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={link.label}
-                className="flex items-center gap-3 text-brand-200 hover:text-white transition-colors duration-200 group"
-              >
-                <link.icon className="w-4.5 h-4.5 text-brand-400 group-hover:text-brand-200 transition-colors duration-200" />
-                <span className="text-sm" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-                  {link.label}
-                </span>
-              </a>
-            ))}
-          </div>
-          <p className="text-sm text-brand-300 mt-3" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-            &copy; 2026 PT. Chitra Paratama
-          </p>
+        <div className="flex flex-col items-start md:items-end gap-3">
+          {socialLinks.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={link.label}
+              className="flex items-center gap-3 text-brand-200 hover:text-white transition-colors duration-200 group"
+            >
+              <link.icon className="w-4.5 h-4.5 text-brand-400 group-hover:text-brand-200 transition-colors duration-200" />
+              <span className="text-sm" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+                {link.label}
+              </span>
+            </a>
+          ))}
         </div>
+      </div>
+
+      <div className="border-t border-brand-800">
+        <p className="max-w-6xl mx-auto px-6 py-4 text-center text-sm text-white" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+          &copy; 2026 PT. Chitra Paratama
+        </p>
       </div>
     </footer>
   );
