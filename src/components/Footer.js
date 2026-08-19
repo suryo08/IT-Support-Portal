@@ -46,12 +46,12 @@ const Footer = () => {
             <img
               src="/logo.png"
               alt="Fix IT"
-              className="h-14 w-auto object-contain"
+              className="h-14 w-auto object-contain brightness-0 invert"
             />
             <img
               src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
               alt="PT. Chitra Paratama"
-              className="h-11 w-auto object-contain"
+              className="h-11 w-auto object-contain brightness-0 invert"
             />
           </div>
           <div>
