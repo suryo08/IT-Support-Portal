@@ -23,54 +23,71 @@ const socialLinks = [
   {
     icon: InstagramIcon,
     href: 'https://instagram.com/chitraparatama_id',
-    label: 'Instagram',
+    label: '@chitraparatama_id',
   },
   {
     icon: Globe,
     href: 'https://www.chitraparatama.co.id',
-    label: 'Website',
+    label: 'www.chitraparatama.co.id',
   },
   {
     icon: LinkedinIcon,
     href: 'https://linkedin.com/company/Chitra-Paratama',
-    label: 'LinkedIn',
+    label: 'Chitra Paratama',
   },
 ];
 
 const Footer = () => {
   return (
     <footer className="border-t border-slate-200 bg-white">
-      <div className="max-w-4xl mx-auto px-6 py-8 flex flex-col items-center gap-5">
-        <div className="flex items-center gap-6">
-          <img
-            src="/logo.png"
-            alt="Fix IT"
-            className="h-10 w-auto object-contain"
-          />
-          <div className="h-8 w-px bg-slate-200"></div>
-          <img
-            src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
-            alt="PT. Chitra Paratama"
-            className="h-10 w-auto object-contain"
-          />
+      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row justify-between gap-8">
+        <div className="flex flex-col gap-4">
+          <div className="flex items-center gap-3">
+            <img
+              src="/logo.png"
+              alt="Fix IT"
+              className="h-12 w-auto object-contain"
+            />
+            <img
+              src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
+              alt="PT. Chitra Paratama"
+              className="h-10 w-auto object-contain"
+            />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-brand-700" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+              PT. Chitra Paratama
+            </p>
+            <p className="text-xs text-brand-400 leading-relaxed mt-1" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+              Graha Indah Jl. Amd No.69, Karang Joang,<br />
+              Kec. Balikpapan Utara, Kota Balikpapan,<br />
+              Kalimantan Timur 76127
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
-          {socialLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={link.label}
-              className="text-brand-400 hover:text-brand-500 transition-colors duration-200"
-            >
-              <link.icon className="w-5 h-5" />
-            </a>
-          ))}
+
+        <div className="flex flex-col items-start md:items-end gap-4">
+          <div className="flex flex-col gap-2.5">
+            {socialLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={link.label}
+                className="flex items-center gap-2.5 text-brand-500 hover:text-brand-600 transition-colors duration-200 group"
+              >
+                <link.icon className="w-4 h-4 text-brand-400 group-hover:text-brand-500 transition-colors duration-200" />
+                <span className="text-xs" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+                  {link.label}
+                </span>
+              </a>
+            ))}
+          </div>
+          <p className="text-xs text-brand-400 mt-2" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+            &copy; 2026 PT. Chitra Paratama
+          </p>
         </div>
-        <p className="text-sm text-brand-700" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-          &copy; 2026 PT. Chitra Paratama
-        </p>
       </div>
     </footer>
   );
