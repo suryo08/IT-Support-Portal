@@ -39,26 +39,26 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="border-t border-slate-200 bg-white">
-      <div className="max-w-6xl mx-auto px-6 py-10 flex flex-col md:flex-row justify-between gap-8">
-        <div className="flex flex-col gap-4">
+    <footer className="border-t border-brand-800 bg-brand-900">
+      <div className="max-w-6xl mx-auto px-6 py-12 flex flex-col md:flex-row justify-between gap-8">
+        <div className="flex flex-col gap-5">
           <div className="flex items-center gap-3">
             <img
               src="/logo.png"
               alt="Fix IT"
-              className="h-12 w-auto object-contain"
+              className="h-14 w-auto object-contain"
             />
             <img
               src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
               alt="PT. Chitra Paratama"
-              className="h-10 w-auto object-contain"
+              className="h-11 w-auto object-contain"
             />
           </div>
           <div>
-            <p className="text-sm font-semibold text-brand-700" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+            <p className="text-base font-semibold text-white" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
               PT. Chitra Paratama
             </p>
-            <p className="text-xs text-brand-400 leading-relaxed mt-1" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+            <p className="text-sm text-brand-300 leading-relaxed mt-1.5" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
               Graha Indah Jl. Amd No.69, Karang Joang,<br />
               Kec. Balikpapan Utara, Kota Balikpapan,<br />
               Kalimantan Timur 76127
@@ -67,7 +67,7 @@ const Footer = () => {
         </div>
 
         <div className="flex flex-col items-start md:items-end gap-4">
-          <div className="flex flex-col gap-2.5">
+          <div className="flex flex-col gap-3">
             {socialLinks.map((link) => (
               <a
                 key={link.label}
@@ -75,16 +75,16 @@ const Footer = () => {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label={link.label}
-                className="flex items-center gap-2.5 text-brand-500 hover:text-brand-600 transition-colors duration-200 group"
+                className="flex items-center gap-3 text-brand-200 hover:text-white transition-colors duration-200 group"
               >
-                <link.icon className="w-4 h-4 text-brand-400 group-hover:text-brand-500 transition-colors duration-200" />
-                <span className="text-xs" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+                <link.icon className="w-4.5 h-4.5 text-brand-400 group-hover:text-brand-200 transition-colors duration-200" />
+                <span className="text-sm" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
                   {link.label}
                 </span>
               </a>
             ))}
           </div>
-          <p className="text-xs text-brand-400 mt-2" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+          <p className="text-sm text-brand-300 mt-3" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
             &copy; 2026 PT. Chitra Paratama
           </p>
         </div>
