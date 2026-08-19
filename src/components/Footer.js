@@ -79,7 +79,7 @@ const Footer = () => {
               <span className="w-5 h-5 flex items-center justify-center flex-shrink-0 text-brand-400 group-hover:text-brand-200 transition-colors duration-200">
                 <link.icon className="w-5 h-5" />
               </span>
-              <span className="text-sm w-48 text-left md:text-right" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+              <span className="text-sm w-48 text-left" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
                 {link.label}
               </span>
             </a>
