@@ -76,8 +76,10 @@ const Footer = () => {
               aria-label={link.label}
               className="flex items-center gap-3 text-brand-200 hover:text-white transition-colors duration-200 group"
             >
-              <link.icon className="w-4.5 h-4.5 text-brand-400 group-hover:text-brand-200 transition-colors duration-200" />
-              <span className="text-sm" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+              <span className="w-5 h-5 flex items-center justify-center flex-shrink-0 text-brand-400 group-hover:text-brand-200 transition-colors duration-200">
+                <link.icon className="w-5 h-5" />
+              </span>
+              <span className="text-sm w-48 text-left md:text-right" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
                 {link.label}
               </span>
             </a>
