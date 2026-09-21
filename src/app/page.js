@@ -103,7 +103,7 @@ const PublicSearchPage = () => {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-4xl mx-auto px-6 py-4 flex justify-between items-center">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
         <Link href="/" className="flex items-center">
           <img
             src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
@@ -149,18 +149,18 @@ const PublicSearchPage = () => {
         )}
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <div className="text-center mb-12 flex flex-col items-center">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12">
+        <div className="text-center mb-8 flex flex-col items-center">
           <img
             src="/logo.png"
             alt="Fix IT"
-            className="h-44 md:h-56 w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,35,83,0.18)]"
+            className="h-36 md:h-44 w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,35,83,0.18)]"
           />
-          <div className="mt-4 text-center">
+          <div className="mt-3 text-center">
             <p className="text-xl md:text-2xl font-semibold tracking-wide text-brand-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Your Guide to <span className="text-brand-500">Solving IT Problems</span>
             </p>
-            <div className="mt-4 flex items-center justify-center gap-2">
+            <div className="mt-3 flex items-center justify-center gap-2">
               <div className="h-px w-10 bg-gradient-to-r from-transparent to-brand-300"></div>
               <span className="h-1.5 w-1.5 rounded-full bg-brand-500"></span>
               <div className="h-px w-10 bg-gradient-to-l from-transparent to-brand-300"></div>
@@ -168,7 +168,7 @@ const PublicSearchPage = () => {
           </div>
         </div>
 
-        <form onSubmit={handleSearch} className="mb-6">
+        <form onSubmit={handleSearch} className="mb-4">
           <div className="relative">
             <Input
               data-testid="search-input"
@@ -176,20 +176,20 @@ const PublicSearchPage = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Ketik permasalahan device Anda..."
-              className="border-2 border-slate-200 focus:border-slate-900 rounded-lg p-4 text-lg w-full shadow-sm pr-12 transition-all duration-200"
+              className="border border-slate-300 focus:border-brand-500 focus:ring-1 focus:ring-brand-500 rounded-lg h-11 py-2.5 pl-4 pr-12 text-sm md:text-base w-full shadow-xs transition-all duration-200"
               style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
             />
             <Button
               data-testid="search-button"
               type="submit"
               disabled={loading || !query.trim()}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200"
+              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-brand-500 text-white hover:bg-brand-600 rounded-md flex items-center justify-center transition-all duration-200"
             >
-              {loading ? 'Mencari...' : <Search className="w-5 h-5" />}
+              {loading ? '...' : <Search className="w-4 h-4" />}
             </Button>
           </div>
-          <div className="mt-2 flex items-center justify-between text-xs text-slate-500">
-            <span className="flex items-center gap-1.5 text-brand-600 font-semibold bg-brand-50 px-2 py-1 rounded">
+          <div className="mt-1.5 flex items-center justify-between text-xs text-slate-500">
+            <span className="flex items-center gap-1.5 text-brand-600 font-semibold bg-brand-50 px-2 py-0.5 rounded text-[11px]">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
@@ -199,14 +199,15 @@ const PublicSearchPage = () => {
           </div>
         </form>
 
-        <div className="mb-8 flex items-center gap-3 flex-wrap">
-          <Filter className="w-5 h-5 text-slate-500" />
-          <span className="text-sm font-semibold text-slate-500" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>Kategori:</span>
+        <div className="mb-6 flex items-center gap-2 flex-wrap">
+          <Filter className="w-4 h-4 text-slate-400" />
+          <span className="text-xs font-semibold text-slate-500" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>Kategori:</span>
           <Button
             data-testid="category-all"
             onClick={() => handleCategoryChange('all')}
             variant={selectedCategory === 'all' ? 'default' : 'outline'}
-            className={selectedCategory === 'all' ? 'bg-brand-500 text-white hover:bg-brand-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}
+            size="sm"
+            className={`h-7 px-2.5 text-xs rounded-md ${selectedCategory === 'all' ? 'bg-brand-500 text-white hover:bg-brand-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}`}
           >
             Semua
           </Button>
@@ -216,7 +217,8 @@ const PublicSearchPage = () => {
               data-testid={`category-${cat}`}
               onClick={() => handleCategoryChange(cat)}
               variant={selectedCategory === cat ? 'default' : 'outline'}
-              className={selectedCategory === cat ? 'bg-brand-500 text-white hover:bg-brand-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}
+              size="sm"
+              className={`h-7 px-2.5 text-xs rounded-md ${selectedCategory === cat ? 'bg-brand-500 text-white hover:bg-brand-600' : 'border-slate-200 text-slate-700 hover:bg-slate-50'}`}
             >
               {cat}
             </Button>
@@ -224,51 +226,70 @@ const PublicSearchPage = () => {
         </div>
 
         {results.length > 0 && (
-          <div className="space-y-6">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
-              {selectedCategory === 'all' ? 'Semua Tutorial' : `Tutorial ${selectedCategory}`} ({results.length})
-            </h2>
-            {results.map((result) => (
-              <div
-                key={result.id}
-                data-testid={`search-result-${result.id}`}
-                className="border border-slate-200 rounded-lg p-6 hover:bg-slate-50 transition-all duration-200"
-              >
-                <div className="flex items-start gap-4">
-                  <FileText className="w-6 h-6 text-brand-500 mt-1 flex-shrink-0" />
-                  <div className="flex-1">
-                    <button
-                      data-testid={`result-title-${result.id}`}
-                      onClick={() => handleOpenPdf(result)}
-                      className="text-xl font-semibold text-slate-900 hover:text-brand-500 transition-colors duration-200 text-left"
-                      style={{ fontFamily: 'Outfit, sans-serif' }}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg md:text-xl font-bold tracking-tight text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                {selectedCategory === 'all' ? 'Semua Tutorial' : `Tutorial ${selectedCategory}`} ({results.length})
+              </h2>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {results.map((result) => (
+                <div
+                  key={result.id}
+                  data-testid={`search-result-${result.id}`}
+                  className="border border-slate-200 rounded-xl p-4 md:p-5 hover:border-brand-300 hover:shadow-md hover:bg-slate-50/60 transition-all duration-200 bg-white flex flex-col justify-between group cursor-pointer"
+                  onClick={() => handleOpenPdf(result)}
+                >
+                  <div>
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-2.5 min-w-0 flex-1">
+                        <FileText className="w-5 h-5 text-brand-500 mt-0.5 flex-shrink-0" />
+                        <button
+                          data-testid={`result-title-${result.id}`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleOpenPdf(result);
+                          }}
+                          className="text-base font-semibold text-slate-900 group-hover:text-brand-600 transition-colors duration-200 text-left line-clamp-2 leading-snug"
+                          style={{ fontFamily: 'Outfit, sans-serif' }}
+                          title={result.title}
+                        >
+                          {result.title}
+                        </button>
+                      </div>
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide bg-brand-50 text-brand-700 border border-brand-200/70 flex-shrink-0">
+                        {result.category}
+                      </span>
+                    </div>
+                    <p
+                      className="text-xs md:text-sm leading-relaxed text-slate-600 line-clamp-2 mt-2"
+                      style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
+                      title={result.content}
                     >
-                      {result.title}
-                    </button>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 mt-2" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-                      {result.category}
+                      {result.content}
                     </p>
-                    <p className="text-base leading-relaxed text-slate-700 mt-3" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
-                      {result.content.substring(0, 200)}{result.content.length > 200 ? '...' : ''}
-                    </p>
-                    {result.score && result.score > 0 && result.score !== 0.5 && (
-                      <div className="flex items-center gap-1.5 mt-3">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-brand-100 text-brand-800 border border-brand-200">
+                  </div>
+
+                  <div className="flex items-center justify-between pt-3 mt-3 border-t border-slate-100">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {result.score && result.score > 0 && result.score !== 0.5 && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-[11px] font-semibold bg-brand-100 text-brand-800 border border-brand-200">
                           ✨ AI Match: {(result.score * 100).toFixed(0)}%
                         </span>
-                      </div>
-                    )}
-                    {result.score === 0.5 && (
-                      <div className="flex items-center gap-1.5 mt-3">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-800 border border-blue-200">
+                      )}
+                      {result.score === 0.5 && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] md:text-[11px] font-semibold bg-blue-100 text-blue-800 border border-blue-200">
                           Keyword Match
                         </span>
-                      </div>
-                    )}
+                      )}
+                    </div>
+                    <span className="text-xs font-medium text-brand-600 group-hover:text-brand-700 inline-flex items-center gap-0.5 ml-auto">
+                      Buka PDF &rarr;
+                    </span>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         )}
 
