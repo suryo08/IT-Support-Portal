@@ -5,9 +5,9 @@ export async function GET(req) {
   try {
     const user = await getCurrentUser(req);
     if (!user) {
-      return NextResponse.json({ detail: 'Not authenticated' }, { status: 401 });
+      return NextResponse.json({ authenticated: false, user: null });
     }
-    return NextResponse.json(user);
+    return NextResponse.json({ ...user, authenticated: true });
   } catch (err) {
     console.error('Auth me error:', err);
     return NextResponse.json({ detail: 'Terjadi kesalahan pada server' }, { status: 500 });

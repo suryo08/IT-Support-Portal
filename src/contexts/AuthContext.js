@@ -22,9 +22,13 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = useCallback(async () => {
     try {
       const { data } = await axios.get(`${API}/auth/me`);
-      setUser(data);
+      if (data && data.authenticated !== false && data.id) {
+        setUser(data);
+      } else {
+        setUser(null);
+      }
     } catch (error) {
-      setUser(false);
+      setUser(null);
     } finally {
       setLoading(false);
     }

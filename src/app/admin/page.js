@@ -221,17 +221,17 @@ const AdminDashboard = () => {
               Admin Dashboard
             </h1>
             <nav className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-lg ml-6">
-              <Link href="/admin">
-                <Button variant="ghost" size="sm" className="bg-white text-slate-900 shadow-sm hover:bg-white font-semibold">
+              <Button asChild variant="ghost" size="sm" className="bg-white text-slate-900 shadow-sm hover:bg-white font-semibold">
+                <Link href="/admin">
                   Tutorials
-                </Button>
-              </Link>
-              {user?.role === 'super_admin' && (
-                <Link href="/admin/users">
-                  <Button variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium">
-                    User Management
-                  </Button>
                 </Link>
+              </Button>
+              {user?.role === 'super_admin' && (
+                <Button asChild variant="ghost" size="sm" className="text-slate-600 hover:text-slate-900 hover:bg-slate-200/50 font-medium">
+                  <Link href="/admin/users">
+                    User Management
+                  </Link>
+                </Button>
               )}
             </nav>
           </div>

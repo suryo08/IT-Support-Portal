@@ -95,7 +95,7 @@ const AdminRegisterPage = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+              placeholder="••••••••"
               className="mt-2 border border-slate-200 rounded-md focus:ring-2 focus:ring-brand-400 focus:outline-none"
               required
               minLength={8}
