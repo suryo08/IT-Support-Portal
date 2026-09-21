@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { usePathname } from 'next/navigation';
 import axios from 'axios';
 import { 
   Headphones, 
@@ -24,8 +25,14 @@ const contacts = [
 ];
 
 const SupportButton = () => {
+  const pathname = usePathname();
   const [contactOpen, setContactOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+
+  // Hanya tampil di halaman utama ('/')
+  if (pathname !== '/') {
+    return null;
+  }
 
   // Feedback form state
   const [category, setCategory] = useState('request_tutorial'); // 'request_tutorial' | 'improvement' | 'other'
@@ -140,13 +147,13 @@ const SupportButton = () => {
         {/* 1. Button "Hubungi IT Support" with explicit CTA text */}
         <button
           onClick={() => setContactOpen(!contactOpen)}
-          className="flex items-center gap-2.5 px-4 py-2.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group border border-brand-400/30"
+          className="w-[205px] h-11 flex items-center gap-2.5 px-3.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group border border-brand-400/30"
           aria-label="Hubungi IT Support"
         >
-          <div className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+          <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
             <Headphones className="w-3.5 h-3.5 text-white" />
           </div>
-          <span className="text-sm font-semibold tracking-wide" style={{ fontFamily: 'Outfit, sans-serif' }}>
+          <span className="text-sm font-semibold tracking-wide truncate" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Hubungi IT Support
           </span>
         </button>
@@ -154,14 +161,14 @@ const SupportButton = () => {
         {/* 2. Button "Saran / Masukan" located below "Hubungi IT Support" */}
         <button
           onClick={handleOpenFeedback}
-          className="flex items-center gap-2.5 px-4 py-2 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 hover:text-brand-600 rounded-full shadow-md hover:shadow-lg border border-slate-200 transition-all duration-200 group"
+          className="w-[205px] h-11 flex items-center gap-2.5 px-3.5 bg-white hover:bg-slate-50 active:scale-95 text-slate-800 hover:text-brand-600 rounded-full shadow-lg hover:shadow-xl border border-slate-200 hover:border-brand-200 transition-all duration-200 group"
           aria-label="Saran dan Masukan"
         >
-          <div className="w-6 h-6 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+          <div className="w-7 h-7 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
             <MessageSquarePlus className="w-3.5 h-3.5" />
           </div>
-          <span className="text-xs md:text-sm font-medium" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            Saran & Request
+          <span className="text-sm font-semibold tracking-wide text-slate-700 group-hover:text-brand-600 truncate" style={{ fontFamily: 'Outfit, sans-serif' }}>
+            Saran & Masukan
           </span>
         </button>
 
