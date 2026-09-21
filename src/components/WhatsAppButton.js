@@ -29,11 +29,6 @@ const SupportButton = () => {
   const [contactOpen, setContactOpen] = useState(false);
   const [feedbackOpen, setFeedbackOpen] = useState(false);
 
-  // Hanya tampil di halaman utama ('/')
-  if (pathname !== '/') {
-    return null;
-  }
-
   // Feedback form state
   const [category, setCategory] = useState('request_tutorial'); // 'request_tutorial' | 'improvement' | 'other'
   const [name, setName] = useState('');
@@ -43,6 +38,11 @@ const SupportButton = () => {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  // Hanya tampil di halaman utama ('/')
+  if (pathname !== '/') {
+    return null;
+  }
 
   const handleOpenFeedback = () => {
     setContactOpen(false);
