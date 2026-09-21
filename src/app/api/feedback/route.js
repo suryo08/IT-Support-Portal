@@ -35,8 +35,14 @@ export async function GET(req) {
 // POST new feedback (Public)
 export async function POST(req) {
   try {
-    const body = await req.json();
-    const { name, contact, category, title, message } = body;
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ detail: 'Format data tidak valid' }, { status: 400 });
+    }
+
+    const { name, contact, category, title, message } = body || {};
 
     if (!name || !title || !message) {
       return NextResponse.json({ detail: 'Nama, judul, dan pesan wajib diisi' }, { status: 400 });

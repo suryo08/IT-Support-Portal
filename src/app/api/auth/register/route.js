@@ -5,7 +5,14 @@ import { query } from '@/lib/db';
 
 export async function POST(req) {
   try {
-    const { email, password, name } = await req.json();
+    let body;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ detail: 'Format data tidak valid' }, { status: 400 });
+    }
+
+    const { email, password, name } = body || {};
 
     if (!email || !password || !name) {
       return NextResponse.json({ detail: 'Data registrasi tidak lengkap' }, { status: 400 });

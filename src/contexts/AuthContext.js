@@ -66,7 +66,7 @@ export const AuthProvider = ({ children }) => {
   const logout = useCallback(async () => {
     try {
       await axios.post(`${API}/auth/logout`, {});
-      setUser(false);
+      setUser(null);
     } catch (error) {
       console.error('Logout error:', error);
     }

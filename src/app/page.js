@@ -7,6 +7,7 @@ import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
+import SupportButton from '@/components/WhatsAppButton';
 
 const API = '/api';
 
@@ -114,42 +115,30 @@ const PublicSearchPage = () => {
         {!authLoading && (
           user && ['admin', 'super_admin'].includes(user.role) && user.status === 'approved' ? (
             <div className="flex items-center gap-3">
-              <Button
-                asChild
-                variant="outline"
-                size="sm"
-                className="border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+              <Link
+                href="/admin"
+                className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
               >
-                <Link href="/admin">
-                  Dashboard Admin
-                </Link>
-              </Button>
+                Dashboard Admin
+              </Link>
               {user.role === 'super_admin' && (
-                <Button
-                  asChild
-                  variant="outline"
-                  size="sm"
-                  className="border-slate-200 text-slate-700 hover:bg-slate-50 font-medium"
+                <Link
+                  href="/admin/users"
+                  className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
                 >
-                  <Link href="/admin/users">
-                    User Management
-                  </Link>
-                </Button>
+                  User Management
+                </Link>
               )}
             </div>
           ) : (
-            <Button
-              asChild
+            <Link
+              href="/login"
               data-testid="admin-login-icon"
-              variant="ghost"
-              size="icon"
-              className="text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-all duration-200 cursor-pointer"
+              className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-all duration-200 cursor-pointer inline-flex items-center justify-center"
               title="Admin Login"
             >
-              <Link href="/login">
-                <Settings className="w-5 h-5" />
-              </Link>
-            </Button>
+              <Settings className="w-5 h-5" />
+            </Link>
           )
         )}
       </div>
@@ -351,6 +340,9 @@ const PublicSearchPage = () => {
           </div>
         </div>
       )}
+
+      {/* Floating Action Buttons for IT Support & Feedback */}
+      <SupportButton />
     </div>
   );
 };
