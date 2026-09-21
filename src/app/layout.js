@@ -2,6 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Footer from "@/components/Footer";
+import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,6 +17,30 @@ const geistMono = Geist_Mono({
 export const metadata = {
   title: "Fix IT",
   description: "Fix IT - Find solutions to your IT issues",
+  applicationName: "Fix IT",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Fix IT",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      { url: "/web-app-manifest-192x192.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
+};
+
+export const viewport = {
+  themeColor: "#006AC7",
+  width: "device-width",
+  initialScale: 1,
 };
 
 export default function RootLayout({ children }) {
@@ -28,6 +53,7 @@ export default function RootLayout({ children }) {
           </div>
         </AuthProvider>
         <Footer />
+        <PwaInstallPrompt />
       </body>
     </html>
   );
