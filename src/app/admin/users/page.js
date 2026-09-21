@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -18,6 +18,7 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import AdminInboxModal from '@/components/AdminInboxModal';
 
 const UserManagement = () => {
   const { user, logout } = useAuth();
@@ -253,8 +254,9 @@ const UserManagement = () => {
               </Link>
             </nav>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-500 font-medium" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+          <div className="flex items-center gap-3">
+            <AdminInboxModal />
+            <span className="text-sm text-slate-500 font-medium hidden sm:inline" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
               {user?.email}
             </span>
             <Button

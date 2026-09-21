@@ -80,6 +80,21 @@ export async function initDb() {
     `);
     console.log('tutorials table verified.');
 
+    // 4. Create feedbacks table
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS feedbacks (
+        id VARCHAR(255) PRIMARY KEY,
+        name VARCHAR(255) NOT NULL,
+        contact VARCHAR(255),
+        category VARCHAR(100) NOT NULL DEFAULT 'request_tutorial',
+        title VARCHAR(255) NOT NULL,
+        message TEXT NOT NULL,
+        status VARCHAR(50) NOT NULL DEFAULT 'unread',
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('feedbacks table verified.');
+
     // 4. Seed default admin account
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@itsupport.com';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';

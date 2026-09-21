@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import AdminInboxModal from '@/components/AdminInboxModal';
 
 const API = '/api';
 const MAX_FILE_SIZE_MB = 10;
@@ -234,8 +235,9 @@ const AdminDashboard = () => {
               )}
             </nav>
           </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-slate-500" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
+          <div className="flex items-center gap-3">
+            <AdminInboxModal />
+            <span className="text-sm text-slate-500 hidden sm:inline" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>
               {user?.email}
             </span>
             <Button
