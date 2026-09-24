@@ -2,12 +2,23 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Search, FileText, Download, X, Filter, Settings } from 'lucide-react';
+import { 
+  Search, 
+  FileText, 
+  Download, 
+  X, 
+  Filter, 
+  Settings, 
+  ThumbsUp, 
+  HelpCircle, 
+  CheckCircle2, 
+  MessageSquarePlus 
+} from 'lucide-react';
 import axios from 'axios';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
-import SupportButton from '@/components/WhatsAppButton';
+import { HeaderSupport, FeedbackModal } from '@/components/WhatsAppButton';
 
 const API = '/api';
 
@@ -20,6 +31,12 @@ const PublicSearchPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [categories, setCategories] = useState([]);
   const [allTutorials, setAllTutorials] = useState([]);
+
+  // Feedback modal & tutorial review state
+  const [feedbackModalOpen, setFeedbackModalOpen] = useState(false);
+  const [feedbackInitialData, setFeedbackInitialData] = useState(null);
+  const [reviewStatus, setReviewStatus] = useState({});
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
 
   useEffect(() => {
     fetchAllTutorials();
@@ -102,45 +119,87 @@ const PublicSearchPage = () => {
     }
   };
 
+  const handleOpenFeedback = (initialData = null) => {
+    setFeedbackInitialData(initialData);
+    setFeedbackModalOpen(true);
+  };
+
+  const handleReviewTutorial = async (tutorial, isHelpful) => {
+    if (!tutorial?.id || reviewSubmitting) return;
+
+    setReviewSubmitting(true);
+    try {
+      await axios.post(`${API}/tutorials/${tutorial.id}/review`, {
+        helpful: isHelpful
+      });
+      setReviewStatus(prev => ({
+        ...prev,
+        [tutorial.id]: isHelpful ? 'helpful' : 'feedback'
+      }));
+    } catch (err) {
+      console.error('Review submission error:', err);
+    } finally {
+      setReviewSubmitting(false);
+    }
+
+    if (!isHelpful) {
+      handleOpenFeedback({
+        category: 'improvement',
+        title: `Masukan untuk tutorial: ${tutorial.title}`,
+        message: `Halo Tim IT Support, mengenai tutorial "${tutorial.title}":\n`
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center">
-        <Link href="/" className="flex items-center">
+      {/* Header with Logo, Support buttons & Admin Access */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex justify-between items-center gap-2">
+        <Link href="/" className="flex items-center flex-shrink-0">
           <img
             src="/ChitraParatama_Logo_OnWhite_Color_Primary.png"
             alt="PT. Chitra Paratama"
-            className="h-8 md:h-10 w-auto object-contain"
+            className="h-7 sm:h-8 md:h-10 w-auto object-contain"
           />
         </Link>
-        {!authLoading && (
-          user && ['admin', 'super_admin'].includes(user.role) && user.status === 'approved' ? (
-            <div className="flex items-center gap-3">
-              <Link
-                href="/admin"
-                className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                Dashboard Admin
-              </Link>
-              {user.role === 'super_admin' && (
+
+        <div className="flex items-center gap-1.5 sm:gap-2.5">
+          {/* Header Support & Feedback Buttons */}
+          <HeaderSupport onOpenFeedback={() => handleOpenFeedback(null)} />
+
+          <div className="h-5 w-px bg-slate-200 mx-0.5 sm:mx-1 hidden xs:block" />
+
+          {!authLoading && (
+            user && ['admin', 'super_admin'].includes(user.role) && user.status === 'approved' ? (
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <Link
-                  href="/admin/users"
-                  className="inline-flex items-center justify-center px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors"
+                  href="/admin"
+                  className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap"
                 >
-                  User Management
+                  <span className="hidden sm:inline">Dashboard Admin</span>
+                  <span className="sm:hidden">Admin</span>
                 </Link>
-              )}
-            </div>
-          ) : (
-            <Link
-              href="/login"
-              data-testid="admin-login-icon"
-              className="p-2 text-slate-500 hover:text-slate-900 hover:bg-slate-100 rounded-md transition-all duration-200 cursor-pointer inline-flex items-center justify-center"
-              title="Admin Login"
-            >
-              <Settings className="w-5 h-5" />
-            </Link>
-          )
-        )}
+                {user.role === 'super_admin' && (
+                  <Link
+                    href="/admin/users"
+                    className="inline-flex items-center justify-center px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-md border border-slate-200 text-slate-700 hover:bg-slate-50 transition-colors whitespace-nowrap hidden md:inline-flex"
+                  >
+                    User Management
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                data-testid="admin-login-icon"
+                className="p-1.5 sm:p-2 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-all duration-200 cursor-pointer inline-flex items-center justify-center flex-shrink-0"
+                title="Admin Login"
+              >
+                <Settings className="w-4 h-4 sm:w-5 sm:h-5" />
+              </Link>
+            )
+          )}
+        </div>
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12">
@@ -337,12 +396,58 @@ const PublicSearchPage = () => {
                 title={selectedPdf.title}
               />
             </div>
+
+            {/* Tutorial Review Footer Bar */}
+            <div className="border-t border-slate-200 bg-slate-50/95 px-4 sm:px-6 py-3 flex-shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-b-lg">
+              <div className="flex items-center gap-2 text-slate-800">
+                <HelpCircle className="w-5 h-5 text-brand-500 flex-shrink-0" />
+                <span className="text-sm font-semibold" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                  Apakah tutorial ini membantu?
+                </span>
+              </div>
+
+              {reviewStatus[selectedPdf.id] ? (
+                <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full animate-in fade-in duration-200">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
+                  <span>
+                    {reviewStatus[selectedPdf.id] === 'helpful'
+                      ? 'Terima kasih atas tanggapan positif Anda!'
+                      : 'Terima kasih, masukan Anda sangat berharga bagi kami!'}
+                  </span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
+                  <button
+                    type="button"
+                    disabled={reviewSubmitting}
+                    onClick={() => handleReviewTutorial(selectedPdf, true)}
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-50"
+                  >
+                    <ThumbsUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span>Ya</span>
+                  </button>
+                  <button
+                    type="button"
+                    disabled={reviewSubmitting}
+                    onClick={() => handleReviewTutorial(selectedPdf, false)}
+                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-200 hover:border-amber-300 transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-50"
+                  >
+                    <MessageSquarePlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
+                    <span>Tidak, berikan masukan</span>
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       )}
 
-      {/* Floating Action Buttons for IT Support & Feedback */}
-      <SupportButton />
+      {/* Modal Saran & Masukan */}
+      <FeedbackModal 
+        isOpen={feedbackModalOpen} 
+        onClose={() => setFeedbackModalOpen(false)} 
+        initialData={feedbackInitialData}
+      />
     </div>
   );
 };

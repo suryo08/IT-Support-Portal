@@ -95,6 +95,19 @@ export async function initDb() {
     `);
     console.log('feedbacks table verified.');
 
+    // 5. Add review metrics to tutorials and create tutorial_reviews table
+    await client.query(`
+      ALTER TABLE tutorials ADD COLUMN IF NOT EXISTS helpful_count INTEGER DEFAULT 0;
+      ALTER TABLE tutorials ADD COLUMN IF NOT EXISTS unhelpful_count INTEGER DEFAULT 0;
+      CREATE TABLE IF NOT EXISTS tutorial_reviews (
+        id VARCHAR(255) PRIMARY KEY,
+        tutorial_id VARCHAR(255) NOT NULL,
+        is_helpful BOOLEAN NOT NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `);
+    console.log('tutorial reviews schema verified.');
+
     // 4. Seed default admin account
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@itsupport.com';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';

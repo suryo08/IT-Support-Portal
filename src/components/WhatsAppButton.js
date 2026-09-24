@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { 
   Headphones, 
@@ -17,13 +17,13 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
-const contacts = [
+export const contacts = [
   { name: 'Aditya Jarangmula N', phone: '62816209911' },
   { name: 'Firmanto S', phone: '628111668978' },
   { name: 'Gilang Suryo W', phone: '6285651152360' },
 ];
 
-function FeedbackModal({ isOpen, onClose }) {
+export function FeedbackModal({ isOpen, onClose, initialData = null }) {
   const [category, setCategory] = useState('request_tutorial');
   const [name, setName] = useState('');
   const [contact, setContact] = useState('');
@@ -32,6 +32,23 @@ function FeedbackModal({ isOpen, onClose }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  // Synchronize state when modal is opened or initialData changes
+  useEffect(() => {
+    if (isOpen) {
+      if (initialData) {
+        setCategory(initialData.category || 'request_tutorial');
+        setTitle(initialData.title || '');
+        setMessage(initialData.message || '');
+      } else {
+        setCategory('request_tutorial');
+        setTitle('');
+        setMessage('');
+      }
+      setSubmitted(false);
+      setError('');
+    }
+  }, [isOpen, initialData]);
 
   if (!isOpen) return null;
 
@@ -117,7 +134,7 @@ function FeedbackModal({ isOpen, onClose }) {
                 Terima Kasih Atas Masukan Anda!
               </h4>
               <p className="text-sm text-slate-600 max-w-sm mb-6 leading-relaxed">
-                Saran dan request tutorial Anda telah terkirim ke kotak masuk tim IT Support untuk segera ditindaklanjuti.
+                Saran dan masukan Anda telah terkirim ke kotak masuk tim IT Support untuk segera ditindaklanjuti.
               </p>
               <Button
                 onClick={handleClose}
@@ -211,7 +228,7 @@ function FeedbackModal({ isOpen, onClose }) {
               {/* Judul Topik */}
               <div>
                 <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                  Judul Topik / Request <span className="text-rose-500">*</span>
+                  Judul Topik / Masukan <span className="text-rose-500">*</span>
                 </label>
                 <Input
                   type="text"
@@ -235,7 +252,7 @@ function FeedbackModal({ isOpen, onClose }) {
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Jelaskan kebutuhan tutorial yang diinginkan, masalah yang dihadapi, atau ide perbaikan sistem secara rinci..."
+                  placeholder="Jelaskan kebutuhan tutorial yang diinginkan, kendala saat membaca panduan, atau ide perbaikan secara rinci..."
                   rows={4}
                   className="w-full text-sm border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all resize-none"
                   required
@@ -279,55 +296,84 @@ function FeedbackModal({ isOpen, onClose }) {
   );
 }
 
-const SupportButton = () => {
+export function HeaderSupport({ onOpenFeedback }) {
   const [contactOpen, setContactOpen] = useState(false);
-  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setContactOpen(false);
+      }
+    }
+    if (contactOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [contactOpen]);
 
   return (
-    <>
-      {/* Floating Action Buttons Container */}
-      <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end gap-2.5">
-        
-        {/* Contact List Popover */}
+    <div className="flex items-center gap-1.5 sm:gap-2.5">
+      {/* 1. Hubungi IT Support with Dropdown Popover */}
+      <div className="relative" ref={dropdownRef}>
+        <button
+          type="button"
+          onClick={() => setContactOpen(!contactOpen)}
+          className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all duration-150 cursor-pointer ${
+            contactOpen 
+              ? 'bg-brand-700 text-white shadow-xs' 
+              : 'bg-brand-500 hover:bg-brand-600 text-white shadow-xs active:scale-95'
+          }`}
+          aria-label="Hubungi IT Support"
+          title="Hubungi IT Support via WhatsApp"
+        >
+          <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+          <span className="hidden md:inline">Hubungi IT Support</span>
+          <span className="md:hidden">IT Support</span>
+        </button>
+
         {contactOpen && (
-          <div className="mb-1 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 w-80 animate-in fade-in slide-in-from-bottom-3 duration-200">
+          <div className="absolute right-0 sm:right-auto sm:left-0 top-full mt-2 w-72 sm:w-80 bg-white rounded-2xl shadow-2xl border border-slate-200 p-3.5 sm:p-4 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center">
-                  <Headphones className="w-4 h-4" />
+                <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center">
+                  <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </div>
                 <div>
-                  <p className="text-sm font-bold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                  <p className="text-xs sm:text-sm font-bold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
                     Hubungi IT Support
                   </p>
-                  <p className="text-[11px] text-slate-500">Pilih personil support via WhatsApp</p>
+                  <p className="text-[10px] sm:text-[11px] text-slate-500">Pilih personil support via WhatsApp</p>
                 </div>
               </div>
               <button
+                type="button"
                 onClick={() => setContactOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100"
+                className="text-slate-400 hover:text-slate-600 p-1 rounded-md hover:bg-slate-100 transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-1.5 sm:gap-2">
               {contacts.map((c) => (
                 <a
                   key={c.phone}
                   href={`https://wa.me/${c.phone}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-brand-50/80 border border-transparent hover:border-brand-200 transition-all duration-150 group"
+                  className="flex items-center gap-2.5 sm:gap-3 px-2.5 sm:px-3 py-2 sm:py-2.5 rounded-xl hover:bg-brand-50/80 border border-transparent hover:border-brand-200 transition-all duration-150 group"
                 >
-                  <div className="w-9 h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
-                    <Phone className="w-4 h-4" />
+                  <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition-colors truncate">
+                    <span className="text-xs sm:text-sm font-semibold text-slate-800 group-hover:text-brand-600 transition-colors truncate">
                       {c.name}
                     </span>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-[11px] sm:text-xs text-slate-500">
                       {c.phone.replace(/^62/, '+62 ').replace(/(\d{3})(\d{4})(\d{4})$/, '$1-$2-$3')}
                     </span>
                   </div>
@@ -336,49 +382,31 @@ const SupportButton = () => {
             </div>
           </div>
         )}
-
-        {/* 1. Button "Hubungi IT Support" with explicit CTA text */}
-        <button
-          onClick={() => {
-            setContactOpen(!contactOpen);
-          }}
-          className="w-[205px] h-11 flex items-center gap-2.5 px-3.5 bg-brand-500 hover:bg-brand-600 active:scale-95 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 group border border-brand-400/30 cursor-pointer"
-          aria-label="Hubungi IT Support"
-        >
-          <div className="w-7 h-7 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
-            <Headphones className="w-3.5 h-3.5 text-white" />
-          </div>
-          <span className="text-sm font-semibold tracking-wide truncate" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            Hubungi IT Support
-          </span>
-        </button>
-
-        {/* 2. Button "Saran / Masukan" located below "Hubungi IT Support" */}
-        <button
-          onClick={() => {
-            setContactOpen(false);
-            setFeedbackOpen(true);
-          }}
-          className="w-[205px] h-11 flex items-center gap-2.5 px-3.5 bg-white hover:bg-slate-50 active:scale-95 text-slate-800 hover:text-brand-600 rounded-full shadow-lg hover:shadow-xl border border-slate-200 hover:border-brand-200 transition-all duration-200 group cursor-pointer"
-          aria-label="Saran dan Masukan"
-        >
-          <div className="w-7 h-7 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0 group-hover:bg-amber-100 transition-colors">
-            <MessageSquarePlus className="w-3.5 h-3.5" />
-          </div>
-          <span className="text-sm font-semibold tracking-wide text-slate-700 group-hover:text-brand-600 truncate" style={{ fontFamily: 'Outfit, sans-serif' }}>
-            Saran & Masukan
-          </span>
-        </button>
-
       </div>
 
-      {/* Pop-up Modal Saran & Masukan */}
-      <FeedbackModal 
-        isOpen={feedbackOpen} 
-        onClose={() => setFeedbackOpen(false)} 
-      />
+      {/* 2. Saran & Masukan Button */}
+      <button
+        type="button"
+        onClick={onOpenFeedback}
+        className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-brand-600 border border-slate-200 hover:border-brand-200 shadow-xs transition-all active:scale-95 cursor-pointer"
+        aria-label="Saran dan Masukan"
+        title="Kirim saran dan masukan atau request tutorial"
+      >
+        <MessageSquarePlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
+        <span className="hidden md:inline">Saran & Masukan</span>
+        <span className="md:hidden">Saran</span>
+      </button>
+    </div>
+  );
+}
+
+// Default export backward compatibility
+export default function SupportButton() {
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  return (
+    <>
+      <HeaderSupport onOpenFeedback={() => setFeedbackOpen(true)} />
+      <FeedbackModal isOpen={feedbackOpen} onClose={() => setFeedbackOpen(false)} />
     </>
   );
-};
-
-export default SupportButton;
+}
