@@ -35,10 +35,23 @@ export async function GET(req) {
     `);
     const recent = parseInt(recentRes.rows[0].count, 10);
 
+    // 4. Site visits in the last 7 days
+    const visitsRes = await query(`
+      SELECT 
+        COUNT(*) as total_visits,
+        COUNT(DISTINCT visitor_id) as unique_devices
+      FROM site_visits 
+      WHERE created_at >= NOW() - INTERVAL '7 days'
+    `);
+    const visits7Days = parseInt(visitsRes.rows[0]?.total_visits || 0, 10);
+    const uniqueDevices7Days = parseInt(visitsRes.rows[0]?.unique_devices || 0, 10);
+
     return NextResponse.json({
       total_tutorials: total,
       by_category: byCategory,
-      recent_uploads: recent
+      recent_uploads: recent,
+      visits_7_days: visits7Days,
+      unique_devices_7_days: uniqueDevices7Days
     });
   } catch (err) {
     console.error('Tutorial stats error:', err);

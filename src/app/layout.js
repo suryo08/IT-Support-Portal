@@ -3,6 +3,7 @@ import "./globals.css";
 import { AuthProvider } from "@/contexts/AuthContext";
 import Footer from "@/components/Footer";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
+import VisitTracker from "@/components/VisitTracker";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,6 +55,7 @@ export default function RootLayout({ children }) {
         </AuthProvider>
         <Footer />
         <PwaInstallPrompt />
+        <VisitTracker />
       </body>
     </html>
   );

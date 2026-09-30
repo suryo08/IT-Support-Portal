@@ -108,7 +108,22 @@ export async function initDb() {
     `);
     console.log('tutorial reviews schema verified.');
 
-    // 4. Seed default admin account
+    // 6. Create site_visits table for analytics
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS site_visits (
+        id VARCHAR(255) PRIMARY KEY,
+        visitor_id VARCHAR(255) NOT NULL,
+        path VARCHAR(255) DEFAULT '/',
+        ip_address VARCHAR(255),
+        user_agent TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE INDEX IF NOT EXISTS idx_site_visits_created_at ON site_visits(created_at);
+      CREATE INDEX IF NOT EXISTS idx_site_visits_visitor_id ON site_visits(visitor_id);
+    `);
+    console.log('site_visits table verified.');
+
+    // 7. Seed default admin account
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@itsupport.com';
     const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
     const adminName = 'Admin IT';

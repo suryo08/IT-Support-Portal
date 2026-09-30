@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { Upload, Trash2, LogOut, FileText, Edit, X, TrendingUp, Layers, Clock } from 'lucide-react';
+import { Upload, Trash2, LogOut, FileText, Edit, X, TrendingUp, Layers, Clock, Users } from 'lucide-react';
 import axios from 'axios';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { Input } from '@/components/ui/input';
@@ -272,11 +272,14 @@ const AdminDashboard = () => {
             <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Kategori</p>
-                  <p className="text-3xl font-bold text-blue-900 mt-2">{stats.by_category.length}</p>
+                  <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Kunjungan 7 Hari</p>
+                  <p className="text-3xl font-bold text-blue-900 mt-2">{stats.visits_7_days ?? 0}</p>
+                  <p className="text-xs text-blue-700/80 mt-1 font-medium">
+                    {(stats.unique_devices_7_days ?? 0)} device unik
+                  </p>
                 </div>
                 <div className="bg-blue-200 rounded-full p-3">
-                  <TrendingUp className="w-8 h-8 text-blue-700" />
+                  <Users className="w-8 h-8 text-blue-700" />
                 </div>
               </div>
             </div>
