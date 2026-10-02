@@ -30,12 +30,37 @@ export async function PUT(req, { params }) {
       return NextResponse.json({ detail: 'Title, category, and content are required' }, { status: 400 });
     }
 
-    // Generate new embedding
+    // Prepare asynchronous tasks: embedding and optional PDF upload
+    const tasks = [
+      embedText(content).catch(embedErr => {
+        console.error('Embedding generation failed during update:', embedErr);
+        return null;
+      })
+    ];
+
+    const hasNewPdf = pdfFile && pdfFile.name;
+    if (hasNewPdf) {
+      const uploadTask = (async () => {
+        const buffer = Buffer.from(await pdfFile.arrayBuffer());
+        const ext = pdfFile.name.split('.').pop() || 'pdf';
+        const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
+        return putObject(storagePath, buffer, 'application/pdf');
+      })();
+      tasks.push(uploadTask);
+    }
+
     let embedding = null;
+    let storageResult = null;
+
     try {
-      embedding = await embedText(content);
-    } catch (embedErr) {
-      console.error('Embedding generation failed during update:', embedErr);
+      const results = await Promise.all(tasks);
+      embedding = results[0];
+      if (hasNewPdf) {
+        storageResult = results[1];
+      }
+    } catch (uploadErr) {
+      console.error('PDF update failed:', uploadErr);
+      return NextResponse.json({ detail: 'PDF upload failed' }, { status: 500 });
     }
 
     // Prepare update parameters
@@ -52,21 +77,10 @@ export async function PUT(req, { params }) {
       paramCounter++;
     }
 
-    // Upload new PDF if provided
-    if (pdfFile && pdfFile.name) {
-      try {
-        const buffer = Buffer.from(await pdfFile.arrayBuffer());
-        const ext = pdfFile.name.split('.').pop() || 'pdf';
-        const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
-        const storageResult = await putObject(storagePath, buffer, 'application/pdf');
-        
-        updateQuery += `, pdf_path = $${paramCounter}`;
-        queryParams.push(storageResult.path);
-        paramCounter++;
-      } catch (uploadErr) {
-        console.error('PDF update failed:', uploadErr);
-        return NextResponse.json({ detail: 'PDF upload failed' }, { status: 500 });
-      }
+    if (storageResult && storageResult.path) {
+      updateQuery += `, pdf_path = $${paramCounter}`;
+      queryParams.push(storageResult.path);
+      paramCounter++;
     }
 
     updateQuery += ` WHERE id = $${paramCounter} RETURNING id, title, category, content, pdf_path, created_at`;

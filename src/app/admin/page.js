@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useAuth } from '@/contexts/AuthContext';
-import { Upload, Trash2, LogOut, FileText, Edit, X, TrendingUp, Layers, Clock, Users } from 'lucide-react';
+import { Upload, Trash2, LogOut, FileText, Edit, X, TrendingUp, Layers, Clock, Users, Loader2 } from 'lucide-react';
 import axios from 'axios';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { Input } from '@/components/ui/input';
@@ -16,7 +16,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import AdminInboxModal from '@/components/AdminInboxModal';
 
 const API = '/api';
-const MAX_FILE_SIZE_MB = 10;
+const MAX_FILE_SIZE_MB = 2;
 const MB_TO_BYTES = 1024 * 1024;
 
 const CATEGORIES = [
@@ -43,6 +43,8 @@ const AdminDashboard = () => {
   const [pdfFile, setPdfFile] = useState(null);
   const [uploadError, setUploadError] = useState('');
   const [uploadSuccess, setUploadSuccess] = useState('');
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadStage, setUploadStage] = useState(''); // 'uploading' | 'processing' | ''
 
   // Edit modal state
   const [editModal, setEditModal] = useState(false);
@@ -51,6 +53,8 @@ const AdminDashboard = () => {
   const [editCategory, setEditCategory] = useState('');
   const [editContent, setEditContent] = useState('');
   const [editPdfFile, setEditPdfFile] = useState(null);
+  const [editUploadProgress, setEditUploadProgress] = useState(0);
+  const [editUploadStage, setEditUploadStage] = useState('');
 
   useEffect(() => {
     fetchTutorials();
@@ -118,6 +122,9 @@ const AdminDashboard = () => {
     }
 
     setLoading(true);
+    setUploadProgress(0);
+    setUploadStage('uploading');
+
     const formData = new FormData();
     formData.append('title', title);
     formData.append('category', category);
@@ -128,21 +135,35 @@ const AdminDashboard = () => {
       await axios.post(`${API}/tutorials`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setUploadProgress(percent);
+            if (percent >= 100) {
+              setUploadStage('processing');
+            }
+          }
         }
       });
+
       setUploadSuccess('Tutorial berhasil ditambahkan!');
       setTitle('');
       setCategory('');
       setContent('');
       setPdfFile(null);
-      document.getElementById('pdf-upload').value = '';
-      await fetchTutorials();
-      await fetchStats();
+      const fileInput = document.getElementById('pdf-upload');
+      if (fileInput) fileInput.value = '';
+
+      // Concurrently reload tutorials and statistics
+      await Promise.all([fetchTutorials(), fetchStats()]);
     } catch (error) {
       console.error('Upload error:', error);
       setUploadError(error.response?.data?.detail || 'Upload gagal');
     } finally {
       setLoading(false);
+      setUploadProgress(0);
+      setUploadStage('');
     }
   };
 
@@ -161,6 +182,9 @@ const AdminDashboard = () => {
     }
 
     setLoading(true);
+    setEditUploadProgress(0);
+    setEditUploadStage(editPdfFile ? 'uploading' : 'processing');
+
     const formData = new FormData();
     formData.append('title', editTitle);
     formData.append('category', editCategory);
@@ -174,18 +198,28 @@ const AdminDashboard = () => {
       await axios.put(`${API}/tutorials/${editingTutorial.id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
+        },
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setEditUploadProgress(percent);
+            if (percent >= 100) {
+              setEditUploadStage('processing');
+            }
+          }
         }
       });
       setEditModal(false);
       setEditingTutorial(null);
       setEditPdfFile(null);
-      await fetchTutorials();
-      await fetchStats();
+      await Promise.all([fetchTutorials(), fetchStats()]);
     } catch (error) {
       console.error('Update error:', error);
       alert('Update gagal: ' + (error.response?.data?.detail || 'Unknown error'));
     } finally {
       setLoading(false);
+      setEditUploadProgress(0);
+      setEditUploadStage('');
     }
   };
 
@@ -375,7 +409,7 @@ const AdminDashboard = () => {
                 >
                   Klik untuk upload atau drag & drop
                 </label>
-                <p className="text-sm text-slate-500 mt-2">PDF maksimal 10MB</p>
+                <p className="text-sm text-slate-500 mt-2">PDF maksimal 2MB</p>
                 {pdfFile && (
                   <p className="text-sm text-slate-700 mt-4 font-semibold">
                     File: {pdfFile.name}
@@ -396,13 +430,50 @@ const AdminDashboard = () => {
               </div>
             )}
 
+            {/* Real-time Upload Progress Bar */}
+            {loading && (
+              <div className="space-y-2 bg-white p-4 rounded-xl border border-brand-200 shadow-xs animate-in fade-in duration-200">
+                <div className="flex items-center justify-between text-xs font-semibold">
+                  <span className="text-slate-800 flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-brand-500" />
+                    {uploadStage === 'uploading'
+                      ? `Mengunggah dokumen (${uploadProgress}%)...`
+                      : 'Menyimpan ke Cloud Storage & Indexing AI...'}
+                  </span>
+                  <span className="text-brand-600 font-bold">{uploadProgress}%</span>
+                </div>
+                <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                  <div 
+                    className="bg-brand-500 h-2.5 rounded-full transition-all duration-300"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+                <p className="text-[11px] text-slate-500">
+                  {uploadStage === 'uploading'
+                    ? 'Sedang mengirimkan file PDF ke server...'
+                    : 'File berhasil terunggah, sedang memproses penyimpanan cloud dan database...'}
+                </p>
+              </div>
+            )}
+
             <Button
               data-testid="submit-tutorial-button"
               type="submit"
               disabled={loading}
-              className="w-full bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200 py-6 text-lg font-semibold"
+              className="w-full bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200 py-6 text-lg font-semibold cursor-pointer disabled:opacity-75"
             >
-              {loading ? 'Uploading...' : 'Tambah Tutorial'}
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  <span>
+                    {uploadStage === 'uploading' 
+                      ? `Mengunggah Dokumen (${uploadProgress}%)...` 
+                      : 'Menyimpan ke Cloud & AI Indexing...'}
+                  </span>
+                </div>
+              ) : (
+                'Tambah Tutorial'
+              )}
             </Button>
           </form>
         </div>
@@ -545,7 +616,20 @@ const AdminDashboard = () => {
                 <Input
                   type="file"
                   accept=".pdf"
-                  onChange={(e) => setEditPdfFile(e.target.files[0])}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      if (file.type !== 'application/pdf') {
+                        alert('Hanya file PDF yang diperbolehkan');
+                        return;
+                      }
+                      if (file.size > MAX_FILE_SIZE_MB * MB_TO_BYTES) {
+                        alert(`Ukuran file maksimal ${MAX_FILE_SIZE_MB}MB`);
+                        return;
+                      }
+                      setEditPdfFile(file);
+                    }
+                  }}
                   className="hidden"
                   id="edit-pdf-upload"
                 />
@@ -604,19 +688,50 @@ const AdminDashboard = () => {
                 </p>
               )}
             </div>
+            {loading && editPdfFile && (
+              <div className="space-y-1.5 bg-brand-50/60 p-3 rounded-lg border border-brand-200">
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-700">
+                  <span className="flex items-center gap-1.5">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-brand-500" />
+                    {editUploadStage === 'uploading'
+                      ? `Mengunggah PDF baru (${editUploadProgress}%)...`
+                      : 'Memperbarui di Cloud & AI Indexing...'}
+                  </span>
+                  <span className="text-brand-600 font-bold">{editUploadProgress}%</span>
+                </div>
+                <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+                  <div 
+                    className="bg-brand-500 h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${editUploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
             <div className="flex justify-end gap-2 mt-6">
               <Button
                 onClick={() => setEditModal(false)}
                 variant="outline"
+                disabled={loading}
               >
                 Batal
               </Button>
               <Button
                 onClick={handleUpdateTutorial}
                 disabled={loading}
-                className="bg-brand-500 text-white hover:bg-brand-600"
+                className="bg-brand-500 text-white hover:bg-brand-600 flex items-center gap-1.5"
               >
-                {loading ? 'Menyimpan...' : 'Simpan Perubahan'}
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>
+                      {editPdfFile && editUploadStage === 'uploading'
+                        ? `Mengunggah (${editUploadProgress}%)...`
+                        : 'Menyimpan...'}
+                    </span>
+                  </>
+                ) : (
+                  'Simpan Perubahan'
+                )}
               </Button>
             </div>
           </div>

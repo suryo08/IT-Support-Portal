@@ -44,31 +44,37 @@ export async function POST(req) {
 
     const tutorialId = crypto.randomUUID();
 
-    // Read PDF file data
+    // Prepare PDF buffer and storage path
+    let buffer;
+    try {
+      buffer = Buffer.from(await pdfFile.arrayBuffer());
+    } catch (readErr) {
+      console.error('Failed to read PDF buffer:', readErr);
+      return NextResponse.json({ detail: 'Gagal membaca file PDF' }, { status: 400 });
+    }
+
+    const originalName = pdfFile.name || 'document.pdf';
+    const ext = originalName.split('.').pop() || 'pdf';
+    const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
+
+    // Run S3 upload and Gemini embedding concurrently to maximize speed
     let pdfPath = null;
-    try {
-      const buffer = Buffer.from(await pdfFile.arrayBuffer());
-      const originalName = pdfFile.name || 'document.pdf';
-      const ext = originalName.split('.').pop() || 'pdf';
-      const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
-      
-      const storageResult = await putObject(storagePath, buffer, 'application/pdf');
-      pdfPath = storageResult.path;
-    } catch (uploadErr) {
-      console.error('PDF upload failed:', uploadErr);
-      return NextResponse.json({ detail: 'PDF upload failed' }, { status: 500 });
-    }
-
-    // Generate embedding
     let embedding = null;
-    try {
-      embedding = await embedText(content);
-    } catch (embedErr) {
-      console.error('Gemini embedding failed, using zero array:', embedErr);
-    }
 
-    if (!embedding) {
-      embedding = new Array(768).fill(0.0);
+    try {
+      const [storageResult, embeddingResult] = await Promise.all([
+        putObject(storagePath, buffer, 'application/pdf'),
+        embedText(content).catch(embedErr => {
+          console.error('Gemini embedding failed, using zero array:', embedErr);
+          return null;
+        })
+      ]);
+
+      pdfPath = storageResult.path;
+      embedding = embeddingResult || new Array(768).fill(0.0);
+    } catch (uploadErr) {
+      console.error('PDF upload to storage failed:', uploadErr);
+      return NextResponse.json({ detail: 'Gagal mengunggah file PDF ke penyimpanan' }, { status: 500 });
     }
 
     // Save to DB
