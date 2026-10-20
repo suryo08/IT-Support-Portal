@@ -315,23 +315,26 @@ export function HeaderSupport({ onOpenFeedback }) {
   }, [contactOpen]);
 
   return (
-    <div className="flex items-center gap-1.5 sm:gap-2.5">
+    <div className="flex items-center gap-1.5 sm:gap-2">
       {/* 1. Hubungi IT Support with Dropdown Popover */}
       <div className="relative" ref={dropdownRef}>
         <button
           type="button"
           onClick={() => setContactOpen(!contactOpen)}
-          className={`inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl transition-all duration-150 cursor-pointer ${
+          className={`group relative inline-flex items-center h-9 rounded-full transition-all duration-300 ease-out cursor-pointer ${
             contactOpen 
-              ? 'bg-brand-700 text-white shadow-xs' 
-              : 'bg-brand-500 hover:bg-brand-600 text-white shadow-xs active:scale-95'
+              ? 'bg-brand-700 text-white shadow-md px-3 gap-2' 
+              : 'bg-brand-500 hover:bg-brand-600 text-white shadow-xs hover:shadow-md px-2.5 hover:px-3.5 gap-0 hover:gap-2 active:scale-95'
           }`}
           aria-label="Hubungi IT Support"
           title="Hubungi IT Support via WhatsApp"
         >
-          <Headphones className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <span className="hidden md:inline">Hubungi IT Support</span>
-          <span className="md:hidden">IT Support</span>
+          <Headphones className="w-4 h-4 flex-shrink-0" />
+          <span className={`overflow-hidden transition-all duration-300 ease-out whitespace-nowrap text-xs font-semibold tracking-wide ${
+            contactOpen ? 'max-w-xs opacity-100' : 'max-w-0 opacity-0 group-hover:max-w-xs group-hover:opacity-100'
+          }`}>
+            Hubungi IT Support
+          </span>
         </button>
 
         {contactOpen && (
@@ -388,13 +391,14 @@ export function HeaderSupport({ onOpenFeedback }) {
       <button
         type="button"
         onClick={onOpenFeedback}
-        className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl bg-white hover:bg-slate-50 text-slate-700 hover:text-brand-600 border border-slate-200 hover:border-brand-200 shadow-xs transition-all active:scale-95 cursor-pointer"
+        className="group relative inline-flex items-center h-9 px-2.5 hover:px-3.5 gap-0 hover:gap-2 text-xs font-semibold rounded-full bg-white hover:bg-slate-50 text-slate-700 hover:text-brand-600 border border-slate-200 hover:border-brand-200 shadow-xs hover:shadow-md transition-all duration-300 ease-out active:scale-95 cursor-pointer"
         aria-label="Saran dan Masukan"
         title="Kirim saran dan masukan atau request tutorial"
       >
-        <MessageSquarePlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
-        <span className="hidden md:inline">Saran & Masukan</span>
-        <span className="md:hidden">Saran</span>
+        <MessageSquarePlus className="w-4 h-4 text-amber-500 flex-shrink-0" />
+        <span className="max-w-0 opacity-0 overflow-hidden group-hover:max-w-xs group-hover:opacity-100 transition-all duration-300 ease-out whitespace-nowrap tracking-wide">
+          Saran & Masukan
+        </span>
       </button>
     </div>
   );

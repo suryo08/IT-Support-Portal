@@ -225,16 +225,16 @@ const UserManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen">
       {/* Header */}
-      <div className="border-b border-slate-200 bg-white shadow-sm">
+      <div className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center cursor-pointer">
               <img
                 src="/logo.png"
                 alt="Fix IT"
-                className="h-12 md:h-14 w-auto object-contain"
+                className="h-10 sm:h-12 w-auto object-contain"
               />
             </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
@@ -262,7 +262,7 @@ const UserManagement = () => {
             <Button
               onClick={handleLogout}
               variant="outline"
-              className="border-slate-200 text-slate-700 hover:bg-slate-100 transition-all duration-200"
+              className="border-slate-200 text-slate-700 bg-white hover:bg-slate-100 transition-all duration-200 shadow-xs"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -284,7 +284,7 @@ const UserManagement = () => {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white border border-slate-200 shadow-sm">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pengguna</p>
@@ -296,7 +296,7 @@ const UserManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-slate-200 shadow-sm">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Menunggu Persetujuan</p>
@@ -308,7 +308,7 @@ const UserManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-slate-200 shadow-sm">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Admin Disetujui</p>
@@ -320,7 +320,7 @@ const UserManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white border border-slate-200 shadow-sm">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pendaftaran Ditolak</p>

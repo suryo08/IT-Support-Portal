@@ -239,15 +239,15 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="border-b border-slate-200 bg-slate-50">
+    <div className="min-h-screen">
+      <div className="border-b border-slate-200/80 bg-white/80 backdrop-blur-md sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center cursor-pointer">
               <img
                 src="/logo.png"
                 alt="Fix IT"
-                className="h-12 md:h-14 w-auto object-contain"
+                className="h-10 sm:h-12 w-auto object-contain"
               />
             </Link>
             <div className="h-6 w-px bg-slate-200 mx-2"></div>
@@ -278,7 +278,7 @@ const AdminDashboard = () => {
               data-testid="logout-button"
               onClick={handleLogout}
               variant="outline"
-              className="border-slate-200 text-slate-900 hover:bg-slate-100 transition-all duration-200"
+              className="border-slate-200 text-slate-900 bg-white hover:bg-slate-100 transition-all duration-200 shadow-xs"
             >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
@@ -291,7 +291,7 @@ const AdminDashboard = () => {
         {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-brand-50 to-brand-100 border border-brand-200 rounded-lg p-6">
+            <div className="bg-gradient-to-br from-brand-50/90 to-brand-100/90 border border-brand-200/80 rounded-2xl p-6 shadow-xs backdrop-blur-xs">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">Total Tutorial</p>
@@ -303,7 +303,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-lg p-6">
+            <div className="bg-gradient-to-br from-blue-50/90 to-blue-100/90 border border-blue-200/80 rounded-2xl p-6 shadow-xs backdrop-blur-xs">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Kunjungan 7 Hari</p>
@@ -318,7 +318,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 border border-purple-200 rounded-lg p-6">
+            <div className="bg-gradient-to-br from-purple-50/90 to-purple-100/90 border border-purple-200/80 rounded-2xl p-6 shadow-xs backdrop-blur-xs">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-purple-600 uppercase tracking-wider">Upload 7 Hari</p>
@@ -333,7 +333,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Upload Form */}
-        <div className="bg-slate-50 border border-slate-200 rounded-lg p-8 mb-8">
+        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl p-6 sm:p-8 mb-8 shadow-xs">
           <h2 className="text-xl font-semibold text-slate-900 mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Tambah Tutorial Baru
           </h2>
@@ -479,7 +479,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Tutorials Table */}
-        <div className="bg-white border border-slate-200 rounded-lg overflow-hidden">
+        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
           <div className="p-6 border-b border-slate-200 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Daftar Tutorial ({filteredTutorials.length})
