@@ -4,6 +4,7 @@ import { query } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { putObject } from '@/lib/storage';
 import { embedText } from '@/lib/gemini';
+import { optimizePdfBuffer } from '@/lib/pdfOptimizer';
 
 // GET all tutorials
 export async function GET() {
@@ -57,13 +58,16 @@ export async function POST(req) {
     const ext = originalName.split('.').pop() || 'pdf';
     const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
 
+    // Optimize PDF before storage upload to ensure lightweight loading
+    const optimizedBuffer = await optimizePdfBuffer(buffer);
+
     // Run S3 upload and Gemini embedding concurrently to maximize speed
     let pdfPath = null;
     let embedding = null;
 
     try {
       const [storageResult, embeddingResult] = await Promise.all([
-        putObject(storagePath, buffer, 'application/pdf'),
+        putObject(storagePath, optimizedBuffer, 'application/pdf'),
         embedText(content).catch(embedErr => {
           console.error('Gemini embedding failed, using zero array:', embedErr);
           return null;

@@ -10,10 +10,8 @@ import {
   MessageSquarePlus, 
   ZoomIn, 
   ZoomOut, 
-  RotateCcw,
   Loader2,
-  AlertTriangle,
-  FileText
+  AlertTriangle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -26,7 +24,7 @@ export default function PdfViewerModal({
   onReview
 }) {
   const [loading, setLoading] = useState(true);
-  const [rendering, setRendering] = useState(false);
+  const [firstPageReady, setFirstPageReady] = useState(false);
   const [error, setError] = useState(null);
   const [numPages, setNumPages] = useState(0);
   const [scale, setScale] = useState(1);
@@ -34,10 +32,13 @@ export default function PdfViewerModal({
   const pdfDocRef = useRef(null);
   const renderTasksRef = useRef([]);
 
-  // Load PDF.js script dynamically
+  // Load PDF.js script dynamically or return existing instance
   const ensurePdfJsLoaded = useCallback(async () => {
     if (typeof window === 'undefined') return null;
-    if (window.pdfjsLib) return window.pdfjsLib;
+    if (window.pdfjsLib) {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
+      return window.pdfjsLib;
+    }
 
     return new Promise((resolve, reject) => {
       let script = document.getElementById('pdfjs-min-script');
@@ -81,18 +82,15 @@ export default function PdfViewerModal({
     renderTasksRef.current.forEach((task) => {
       try {
         if (task && task.cancel) task.cancel();
-      } catch (e) {
-        // Ignore cancel errors
-      }
+      } catch (e) {}
     });
     renderTasksRef.current = [];
   };
 
-  // Render all pages to canvas
+  // Render all pages progressively to canvas (Page 1 first for instant paint!)
   const renderAllPages = useCallback(async (pdfDoc, currentScale) => {
     if (!pdfDoc || !containerRef.current) return;
     cancelRenderTasks();
-    setRendering(true);
 
     const container = containerRef.current;
     const containerWidth = container.clientWidth || window.innerWidth;
@@ -102,38 +100,47 @@ export default function PdfViewerModal({
       const firstPage = await pdfDoc.getPage(1);
       const unscaledViewport = firstPage.getViewport({ scale: 1 });
       
-      // Calculate responsive fit-width scale
+      // Calculate responsive fit-width scale (fits 100% horizontally on phone)
       const horizontalPadding = window.innerWidth < 640 ? 16 : 32;
       const availableWidth = Math.max(containerWidth - horizontalPadding, 260);
       const fitScale = (availableWidth / unscaledViewport.width);
       const finalScale = fitScale * currentScale;
 
-      for (let pageNum = 1; pageNum <= pdfDoc.numPages; pageNum++) {
+      // 1. Render Page 1 first
+      const viewport1 = firstPage.getViewport({ scale: finalScale });
+      const canvas1 = document.getElementById(`pdf-page-canvas-1`);
+      if (canvas1) {
+        const ctx1 = canvas1.getContext('2d');
+        if (ctx1) {
+          canvas1.width = Math.floor(viewport1.width * dpr);
+          canvas1.height = Math.floor(viewport1.height * dpr);
+          canvas1.style.width = `${Math.floor(viewport1.width)}px`;
+          canvas1.style.height = `${Math.floor(viewport1.height)}px`;
+          ctx1.setTransform(dpr, 0, 0, dpr, 0, 0);
+          const task1 = firstPage.render({ canvasContext: ctx1, viewport: viewport1 });
+          renderTasksRef.current.push(task1);
+          await task1.promise;
+        }
+      }
+
+      setFirstPageReady(true);
+
+      // 2. Render remaining pages progressively in background
+      for (let pageNum = 2; pageNum <= pdfDoc.numPages; pageNum++) {
         const page = await pdfDoc.getPage(pageNum);
         const viewport = page.getViewport({ scale: finalScale });
-
         const canvas = document.getElementById(`pdf-page-canvas-${pageNum}`);
         if (!canvas) continue;
-
         const ctx = canvas.getContext('2d');
         if (!ctx) continue;
 
-        // Set buffer size with device pixel ratio
         canvas.width = Math.floor(viewport.width * dpr);
         canvas.height = Math.floor(viewport.height * dpr);
-
-        // Set display CSS size
         canvas.style.width = `${Math.floor(viewport.width)}px`;
         canvas.style.height = `${Math.floor(viewport.height)}px`;
-
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-        const renderContext = {
-          canvasContext: ctx,
-          viewport: viewport,
-        };
-
-        const renderTask = page.render(renderContext);
+        const renderTask = page.render({ canvasContext: ctx, viewport });
         renderTasksRef.current.push(renderTask);
 
         try {
@@ -146,8 +153,6 @@ export default function PdfViewerModal({
       }
     } catch (err) {
       console.error('Render all pages error:', err);
-    } finally {
-      setRendering(false);
     }
   }, []);
 
@@ -157,6 +162,7 @@ export default function PdfViewerModal({
 
     let isMounted = true;
     setLoading(true);
+    setFirstPageReady(false);
     setError(null);
     setScale(1);
 
@@ -170,6 +176,8 @@ export default function PdfViewerModal({
           url: pdfUrl,
           cMapUrl: 'https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/cmaps/',
           cMapPacked: true,
+          disableAutoFetch: false,
+          disableStream: false,
         });
 
         const doc = await loadingTask.promise;
@@ -204,7 +212,6 @@ export default function PdfViewerModal({
   // Trigger render when numPages is set or scale changes
   useEffect(() => {
     if (!loading && numPages > 0 && pdfDocRef.current) {
-      // Use requestAnimationFrame to ensure canvas elements exist in DOM
       const raf = requestAnimationFrame(() => {
         renderAllPages(pdfDocRef.current, scale);
       });
@@ -280,14 +287,14 @@ export default function PdfViewerModal({
           {/* Row 2 on Mobile / Right side on Desktop: Controls Toolbar */}
           <div className="flex items-center justify-between sm:justify-end gap-1.5 sm:gap-2 pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100 flex-shrink-0">
             {/* Page Count indicator */}
-            {numPages > 0 && !loading && (
+            {numPages > 0 && (
               <span className="text-[11px] font-medium text-slate-500">
                 {numPages} Hal {scale !== 1 && `(${Math.round(scale * 100)}%)`}
               </span>
             )}
 
             {/* Zoom Controls */}
-            {!loading && !error && numPages > 0 && (
+            {!error && numPages > 0 && (
               <div className="flex items-center bg-slate-100 rounded-lg p-0.5 border border-slate-200 text-slate-700 ml-auto sm:ml-0">
                 <button
                   type="button"
@@ -360,7 +367,7 @@ export default function PdfViewerModal({
                 Memuat isi tutorial...
               </p>
               <p className="text-xs text-slate-500">
-                Menampilkan halaman agar langsung dapat dibaca
+                Menyiapkan halaman agar langsung dapat dibaca
               </p>
             </div>
           )}
@@ -390,7 +397,7 @@ export default function PdfViewerModal({
                   className="flex flex-col items-center w-full max-w-full"
                 >
                   {/* Canvas Container */}
-                  <div className="relative bg-white rounded-lg sm:rounded-xl shadow-md border border-slate-200/90 overflow-hidden max-w-full">
+                  <div className="relative bg-white rounded-lg sm:rounded-xl shadow-md border border-slate-200/90 overflow-hidden max-w-full min-h-[200px] flex items-center justify-center">
                     <canvas
                       id={`pdf-page-canvas-${pageNum}`}
                       className="block max-w-full h-auto bg-white"

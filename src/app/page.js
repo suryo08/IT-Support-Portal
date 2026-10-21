@@ -51,7 +51,37 @@ const PublicSearchPage = () => {
 
   useEffect(() => {
     fetchAllTutorials();
+
+    // Pre-warm PDF.js engine in the background when idle so tutorial opens instantaneously
+    const warmUpPdfEngine = () => {
+      if (typeof window === 'undefined') return;
+      if (!window.pdfjsLib && !document.getElementById('pdfjs-min-script')) {
+        const script = document.createElement('script');
+        script.id = 'pdfjs-min-script';
+        script.src = '/pdfjs/pdf.min.js';
+        script.async = true;
+        script.onload = () => {
+          if (window.pdfjsLib) {
+            window.pdfjsLib.GlobalWorkerOptions.workerSrc = '/pdfjs/pdf.worker.min.js';
+          }
+        };
+        document.head.appendChild(script);
+      }
+    };
+
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(warmUpPdfEngine);
+    } else {
+      setTimeout(warmUpPdfEngine, 1200);
+    }
   }, []);
+
+  const handlePrefetch = (pdfPath) => {
+    if (!pdfPath || typeof window === 'undefined') return;
+    try {
+      fetch(`/api/files/${pdfPath}`, { priority: 'low' }).catch(() => {});
+    } catch (e) {}
+  };
 
   const fetchAllTutorials = async () => {
     try {
@@ -375,6 +405,8 @@ const PublicSearchPage = () => {
                   key={result.id}
                   data-testid={`search-result-${result.id}`}
                   className="border border-slate-200/90 rounded-xl p-4 md:p-5 hover:border-brand-400 hover:shadow-md hover:shadow-brand-500/5 hover:-translate-y-0.5 transition-all duration-200 bg-white flex flex-col justify-between group cursor-pointer shadow-xs"
+                  onMouseEnter={() => handlePrefetch(result.pdf_path)}
+                  onTouchStart={() => handlePrefetch(result.pdf_path)}
                   onClick={() => handleOpenPdf(result)}
                 >
                   <div>

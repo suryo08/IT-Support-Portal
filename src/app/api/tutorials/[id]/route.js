@@ -3,6 +3,7 @@ import { query } from '@/lib/db';
 import { getCurrentUser } from '@/lib/auth';
 import { putObject } from '@/lib/storage';
 import { embedText } from '@/lib/gemini';
+import { optimizePdfBuffer } from '@/lib/pdfOptimizer';
 
 // PUT update tutorial
 export async function PUT(req, { params }) {
@@ -42,9 +43,10 @@ export async function PUT(req, { params }) {
     if (hasNewPdf) {
       const uploadTask = (async () => {
         const buffer = Buffer.from(await pdfFile.arrayBuffer());
+        const optimizedBuffer = await optimizePdfBuffer(buffer);
         const ext = pdfFile.name.split('.').pop() || 'pdf';
         const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
-        return putObject(storagePath, buffer, 'application/pdf');
+        return putObject(storagePath, optimizedBuffer, 'application/pdf');
       })();
       tasks.push(uploadTask);
     }
