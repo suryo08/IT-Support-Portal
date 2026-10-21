@@ -27,6 +27,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { HeaderSupport, FeedbackModal } from '@/components/WhatsAppButton';
+import PdfViewerModal from '@/components/PdfViewerModal';
 
 const API = '/api';
 const ITEMS_PER_PAGE = 8;
@@ -488,92 +489,15 @@ const PublicSearchPage = () => {
         )}
       </div>
 
-      {selectedPdf && (
-        <div
-          data-testid="pdf-viewer-modal"
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
-          onClick={handleClosePdf}
-        >
-          <div
-            className="bg-white rounded-lg w-full max-w-7xl h-[95vh] flex flex-col"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="border-b border-slate-200 p-4 flex items-center justify-between flex-shrink-0">
-              <h3 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                {selectedPdf.title}
-              </h3>
-              <div className="flex items-center gap-2">
-                <Button
-                  data-testid="download-pdf-button"
-                  onClick={() => handleDownloadPdf(selectedPdf.pdf_path, selectedPdf.title)}
-                  className="bg-brand-500 text-white hover:bg-brand-600 transition-all duration-200"
-                >
-                  <Download className="w-4 h-4 mr-2" />
-                  Download PDF
-                </Button>
-                <Button
-                  data-testid="close-pdf-button"
-                  onClick={handleClosePdf}
-                  variant="outline"
-                  className="border-slate-200"
-                >
-                  <X className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-hidden p-4">
-              <iframe
-                data-testid="pdf-iframe"
-                src={`${API}/files/${selectedPdf.pdf_path}`}
-                className="w-full h-full border-0 rounded-lg shadow-lg"
-                title={selectedPdf.title}
-              />
-            </div>
-
-            {/* Tutorial Review Footer Bar */}
-            <div className="border-t border-slate-200 bg-slate-50/95 px-4 sm:px-6 py-3 flex-shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 rounded-b-lg">
-              <div className="flex items-center gap-2 text-slate-800">
-                <HelpCircle className="w-5 h-5 text-brand-500 flex-shrink-0" />
-                <span className="text-sm font-semibold" style={{ fontFamily: 'Outfit, sans-serif' }}>
-                  Apakah tutorial ini membantu?
-                </span>
-              </div>
-
-              {reviewStatus[selectedPdf.id] ? (
-                <div className="flex items-center gap-2 text-xs sm:text-sm font-medium text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-full animate-in fade-in duration-200">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0" />
-                  <span>
-                    {reviewStatus[selectedPdf.id] === 'helpful'
-                      ? 'Terima kasih atas tanggapan positif Anda!'
-                      : 'Terima kasih, masukan Anda sangat berharga bagi kami!'}
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-end">
-                  <button
-                    type="button"
-                    disabled={reviewSubmitting}
-                    onClick={() => handleReviewTutorial(selectedPdf, true)}
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-4 py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-50"
-                  >
-                    <ThumbsUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                    <span>Ya</span>
-                  </button>
-                  <button
-                    type="button"
-                    disabled={reviewSubmitting}
-                    onClick={() => handleReviewTutorial(selectedPdf, false)}
-                    className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl bg-white hover:bg-amber-50 text-slate-700 hover:text-amber-800 border border-slate-200 hover:border-amber-300 transition-all shadow-xs active:scale-95 cursor-pointer disabled:opacity-50"
-                  >
-                    <MessageSquarePlus className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
-                    <span>Tidak, berikan masukan</span>
-                  </button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Dedicated PDF Tutorial Viewer Modal (Renders natively on Canvas for smartphones & desktop) */}
+      <PdfViewerModal
+        selectedPdf={selectedPdf}
+        onClose={handleClosePdf}
+        onDownload={handleDownloadPdf}
+        reviewStatus={reviewStatus}
+        reviewSubmitting={reviewSubmitting}
+        onReview={handleReviewTutorial}
+      />
 
       {/* Modal Saran & Masukan */}
       <FeedbackModal 
