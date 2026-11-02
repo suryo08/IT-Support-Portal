@@ -72,6 +72,7 @@ export async function initDb() {
         category VARCHAR(100) NOT NULL,
         content TEXT NOT NULL,
         pdf_path VARCHAR(512),
+        video_path VARCHAR(512),
         embedding double precision[],
         is_deleted BOOLEAN DEFAULT FALSE,
         created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
@@ -99,6 +100,7 @@ export async function initDb() {
     await client.query(`
       ALTER TABLE tutorials ADD COLUMN IF NOT EXISTS helpful_count INTEGER DEFAULT 0;
       ALTER TABLE tutorials ADD COLUMN IF NOT EXISTS unhelpful_count INTEGER DEFAULT 0;
+      ALTER TABLE tutorials ADD COLUMN IF NOT EXISTS video_path VARCHAR(512);
       CREATE TABLE IF NOT EXISTS tutorial_reviews (
         id VARCHAR(255) PRIMARY KEY,
         tutorial_id VARCHAR(255) NOT NULL,

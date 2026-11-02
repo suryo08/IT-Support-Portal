@@ -5,6 +5,30 @@ import { putObject } from '@/lib/storage';
 import { embedText } from '@/lib/gemini';
 import { optimizePdfBuffer } from '@/lib/pdfOptimizer';
 
+// GET single tutorial
+export async function GET(req, { params }) {
+  try {
+    const { id: tutorialId } = await params;
+    const res = await query(
+      'SELECT id, title, category, content, pdf_path, video_path, created_at FROM tutorials WHERE id = $1 AND is_deleted = FALSE',
+      [tutorialId]
+    );
+
+    if (res.rows.length === 0) {
+      return NextResponse.json({ detail: 'Tutorial not found' }, { status: 404 });
+    }
+
+    const t = res.rows[0];
+    return NextResponse.json({
+      ...t,
+      created_at: t.created_at ? t.created_at.toISOString() : null
+    });
+  } catch (err) {
+    console.error('Get tutorial error:', err);
+    return NextResponse.json({ detail: 'Terjadi kesalahan pada server' }, { status: 500 });
+  }
+}
+
 // PUT update tutorial
 export async function PUT(req, { params }) {
   try {
@@ -26,12 +50,14 @@ export async function PUT(req, { params }) {
     const category = formData.get('category');
     const content = formData.get('content');
     const pdfFile = formData.get('pdf_file');
+    const videoFile = formData.get('video_file');
+    const removeVideo = formData.get('remove_video') === 'true';
 
     if (!title || !category || !content) {
-      return NextResponse.json({ detail: 'Title, category, and content are required' }, { status: 400 });
+      return NextResponse.json({ detail: 'Judul, kategori, dan deskripsi wajib diisi' }, { status: 400 });
     }
 
-    // Prepare asynchronous tasks: embedding and optional PDF upload
+    // Prepare asynchronous tasks: embedding, optional PDF upload, optional Video upload
     const tasks = [
       embedText(content).catch(embedErr => {
         console.error('Embedding generation failed during update:', embedErr);
@@ -39,30 +65,47 @@ export async function PUT(req, { params }) {
       })
     ];
 
-    const hasNewPdf = pdfFile && pdfFile.name;
+    const hasNewPdf = pdfFile && pdfFile.name && pdfFile.size > 0;
     if (hasNewPdf) {
-      const uploadTask = (async () => {
+      const uploadPdfTask = (async () => {
         const buffer = Buffer.from(await pdfFile.arrayBuffer());
         const optimizedBuffer = await optimizePdfBuffer(buffer);
         const ext = pdfFile.name.split('.').pop() || 'pdf';
         const storagePath = `it-support-portal/tutorials/${tutorialId}.${ext}`;
         return putObject(storagePath, optimizedBuffer, 'application/pdf');
       })();
-      tasks.push(uploadTask);
+      tasks.push(uploadPdfTask);
+    } else {
+      tasks.push(Promise.resolve(null));
+    }
+
+    const hasNewVideo = videoFile && typeof videoFile.arrayBuffer === 'function' && videoFile.size > 0 && videoFile.name;
+    if (hasNewVideo) {
+      const uploadVideoTask = (async () => {
+        const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
+        const videoExt = videoFile.name.split('.').pop()?.toLowerCase() || 'mp4';
+        const videoStoragePath = `it-support-portal/tutorials/${tutorialId}_video.${videoExt}`;
+        const videoContentType = videoFile.type || `video/${videoExt === 'mov' ? 'quicktime' : videoExt}`;
+        const result = await putObject(videoStoragePath, videoBuffer, videoContentType);
+        return result.path;
+      })();
+      tasks.push(uploadVideoTask);
+    } else {
+      tasks.push(Promise.resolve(null));
     }
 
     let embedding = null;
     let storageResult = null;
+    let newVideoPath = null;
 
     try {
       const results = await Promise.all(tasks);
       embedding = results[0];
-      if (hasNewPdf) {
-        storageResult = results[1];
-      }
+      storageResult = results[1];
+      newVideoPath = results[2];
     } catch (uploadErr) {
-      console.error('PDF update failed:', uploadErr);
-      return NextResponse.json({ detail: 'PDF upload failed' }, { status: 500 });
+      console.error('File update failed:', uploadErr);
+      return NextResponse.json({ detail: 'Gagal mengunggah file baru' }, { status: 500 });
     }
 
     // Prepare update parameters
@@ -85,7 +128,15 @@ export async function PUT(req, { params }) {
       paramCounter++;
     }
 
-    updateQuery += ` WHERE id = $${paramCounter} RETURNING id, title, category, content, pdf_path, created_at`;
+    if (newVideoPath) {
+      updateQuery += `, video_path = $${paramCounter}`;
+      queryParams.push(newVideoPath);
+      paramCounter++;
+    } else if (removeVideo) {
+      updateQuery += `, video_path = NULL`;
+    }
+
+    updateQuery += ` WHERE id = $${paramCounter} RETURNING id, title, category, content, pdf_path, video_path, created_at`;
     queryParams.push(tutorialId);
 
     const updateRes = await query(updateQuery, queryParams);

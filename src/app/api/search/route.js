@@ -25,7 +25,7 @@ export async function POST(req) {
     if (embedding) {
       // Perform cosine similarity search
       const sql = `
-        SELECT id, title, category, content, pdf_path, cosine_similarity(embedding, $1) AS score
+        SELECT id, title, category, content, pdf_path, video_path, cosine_similarity(embedding, $1) AS score
         FROM tutorials
         WHERE is_deleted = FALSE
         ORDER BY score DESC
@@ -39,6 +39,7 @@ export async function POST(req) {
         category: r.category,
         content: r.content,
         pdf_path: r.pdf_path,
+        video_path: r.video_path,
         score: parseFloat(r.score) || 0.0
       }));
       return NextResponse.json(results);
@@ -46,7 +47,7 @@ export async function POST(req) {
       // Fallback to keyword text search (ILIKE)
       const keyword = `%${queryStr}%`;
       const sql = `
-        SELECT id, title, category, content, pdf_path
+        SELECT id, title, category, content, pdf_path, video_path
         FROM tutorials
         WHERE is_deleted = FALSE
         AND (title ILIKE $1 OR content ILIKE $1 OR category ILIKE $1)
@@ -60,6 +61,7 @@ export async function POST(req) {
         category: r.category,
         content: r.content,
         pdf_path: r.pdf_path,
+        video_path: r.video_path,
         score: 0.5 // Default score for fallback keyword match
       }));
       return NextResponse.json(results);

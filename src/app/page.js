@@ -20,7 +20,8 @@ import {
   Video,
   Tag,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  Play
 } from 'lucide-react';
 import axios from 'axios';
 import { Input } from '@/components/ui/input';
@@ -48,6 +49,9 @@ const PublicSearchPage = () => {
   const [feedbackInitialData, setFeedbackInitialData] = useState(null);
   const [reviewStatus, setReviewStatus] = useState({});
   const [reviewSubmitting, setReviewSubmitting] = useState(false);
+
+  // Modal pilihan format (Video vs PDF) saat membuka tutorial yang memiliki video
+  const [choiceTutorial, setChoiceTutorial] = useState(null);
 
   useEffect(() => {
     fetchAllTutorials();
@@ -186,23 +190,33 @@ const PublicSearchPage = () => {
     return pages;
   };
 
-  const handleOpenPdf = (result) => {
-    setSelectedPdf(result);
+  const handleOpenPdf = (result, initialTab = 'pdf') => {
+    setSelectedPdf({ ...result, initialTab });
+  };
+
+  const handleTutorialClick = (tutorial) => {
+    if (tutorial?.video_path) {
+      setChoiceTutorial(tutorial);
+    } else {
+      handleOpenPdf(tutorial, 'pdf');
+    }
   };
 
   const handleClosePdf = () => {
     setSelectedPdf(null);
   };
 
-  const handleDownloadPdf = async (pdfPath, title) => {
+  const handleDownloadFile = async (filePath, title, isVideo = false) => {
     try {
-      const response = await axios.get(`${API}/files/${pdfPath}`, {
+      const response = await axios.get(`${API}/files/${filePath}`, {
         responseType: 'blob'
       });
+      const ext = filePath.split('.').pop() || (isVideo ? 'mp4' : 'pdf');
+      const filename = isVideo ? `${title} (Video).${ext}` : `${title}.pdf`;
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      link.setAttribute('download', `${title}.pdf`);
+      link.setAttribute('download', filename);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -407,7 +421,7 @@ const PublicSearchPage = () => {
                   className="border border-slate-200/90 rounded-xl p-4 md:p-5 hover:border-brand-400 hover:shadow-md hover:shadow-brand-500/5 hover:-translate-y-0.5 transition-all duration-200 bg-white flex flex-col justify-between group cursor-pointer shadow-xs"
                   onMouseEnter={() => handlePrefetch(result.pdf_path)}
                   onTouchStart={() => handlePrefetch(result.pdf_path)}
-                  onClick={() => handleOpenPdf(result)}
+                  onClick={() => handleTutorialClick(result)}
                 >
                   <div>
                     <div className="flex items-start justify-between gap-3">
@@ -417,7 +431,7 @@ const PublicSearchPage = () => {
                           data-testid={`result-title-${result.id}`}
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleOpenPdf(result);
+                            handleTutorialClick(result);
                           }}
                           className="text-base font-semibold text-slate-900 group-hover:text-brand-600 transition-colors duration-200 text-left line-clamp-2 leading-snug"
                           style={{ fontFamily: 'Outfit, sans-serif' }}
@@ -426,9 +440,17 @@ const PublicSearchPage = () => {
                           {result.title}
                         </button>
                       </div>
-                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide bg-brand-50 text-brand-700 border border-brand-200/70 flex-shrink-0">
-                        {result.category}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-shrink-0 flex-wrap justify-end">
+                        {result.video_path && (
+                          <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+                            <Video className="w-3 h-3" />
+                            <span>Ada Video</span>
+                          </span>
+                        )}
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-medium tracking-wide bg-brand-50 text-brand-700 border border-brand-200/70 flex-shrink-0">
+                          {result.category}
+                        </span>
+                      </div>
                     </div>
                     <p
                       className="text-xs md:text-sm leading-relaxed text-slate-600 line-clamp-2 mt-2"
@@ -452,9 +474,40 @@ const PublicSearchPage = () => {
                         </span>
                       )}
                     </div>
-                    <span className="text-xs font-medium text-brand-600 group-hover:text-brand-700 inline-flex items-center gap-0.5 ml-auto">
-                      Buka PDF &rarr;
-                    </span>
+                    <div className="flex items-center gap-1.5 ml-auto">
+                      {result.video_path ? (
+                        <>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenPdf(result, 'video');
+                            }}
+                            className="text-xs font-semibold text-amber-800 hover:text-amber-900 bg-amber-100/90 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-md inline-flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+                            title="Tonton Video Panduan Tutorial Langsung"
+                          >
+                            <Play className="w-3 h-3 fill-amber-700 text-amber-700" />
+                            <span>Video</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleOpenPdf(result, 'pdf');
+                            }}
+                            className="text-xs font-medium text-slate-700 hover:text-brand-600 bg-slate-100 hover:bg-slate-200/80 border border-slate-200 px-2.5 py-1 rounded-md inline-flex items-center gap-1 transition-colors cursor-pointer"
+                            title="Buka Dokumen PDF"
+                          >
+                            <FileText className="w-3 h-3 text-slate-500" />
+                            <span>PDF</span>
+                          </button>
+                        </>
+                      ) : (
+                        <span className="text-xs font-medium text-brand-600 group-hover:text-brand-700 inline-flex items-center gap-0.5">
+                          Buka Dokumen &rarr;
+                        </span>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -521,11 +574,107 @@ const PublicSearchPage = () => {
         )}
       </div>
 
-      {/* Dedicated PDF Tutorial Viewer Modal (Renders natively on Canvas for smartphones & desktop) */}
+      {/* Modal Pilihan Format Panduan (PDF vs Video) saat user membuka tutorial yang memiliki video */}
+      {choiceTutorial && (
+        <div 
+          className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 z-50 animate-in fade-in duration-150"
+          onClick={() => setChoiceTutorial(null)}
+        >
+          <div 
+            className="bg-white rounded-2xl max-w-md w-full p-5 sm:p-6 shadow-2xl border border-slate-200 flex flex-col gap-4 animate-in zoom-in-95 duration-150"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold bg-brand-50 text-brand-700 border border-brand-200 mb-1.5">
+                  {choiceTutorial.category || 'Tutorial'}
+                </span>
+                <h3 
+                  className="text-base sm:text-lg font-bold text-slate-900 leading-snug line-clamp-2" 
+                  style={{ fontFamily: 'Outfit, sans-serif' }} 
+                  title={choiceTutorial.title}
+                >
+                  {choiceTutorial.title}
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  Tutorial ini memiliki 2 opsi panduan. Pilih cara belajar yang Anda sukai:
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setChoiceTutorial(null)}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer flex-shrink-0"
+                aria-label="Tutup"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-2.5">
+              {/* Opsi 1: Video Panduan (Opsional) */}
+              <button
+                type="button"
+                onClick={() => {
+                  const tut = choiceTutorial;
+                  setChoiceTutorial(null);
+                  handleOpenPdf(tut, 'video');
+                }}
+                className="group relative flex items-center gap-3.5 p-3.5 sm:p-4 rounded-xl border-2 border-amber-300 bg-linear-to-r from-amber-50/80 to-orange-50/40 hover:from-amber-100 hover:to-orange-100/70 hover:border-amber-500 transition-all text-left shadow-xs cursor-pointer active:scale-[0.99]"
+              >
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform flex-shrink-0">
+                  <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-white ml-0.5" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-sm font-bold text-slate-900 group-hover:text-amber-950" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                      Tonton Video Panduan
+                    </span>
+                    <span className="text-[9px] font-bold px-1.5 py-0.2 rounded-full bg-amber-500 text-white">
+                      OPSIONAL
+                    </span>
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-600 mt-0.5 leading-snug">
+                    Simak demonstrasi visual langsung langkah demi langkah.
+                  </p>
+                </div>
+              </button>
+
+              {/* Opsi 2: Dokumen PDF */}
+              <button
+                type="button"
+                onClick={() => {
+                  const tut = choiceTutorial;
+                  setChoiceTutorial(null);
+                  handleOpenPdf(tut, 'pdf');
+                }}
+                className="group flex items-center gap-3.5 p-3.5 sm:p-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 hover:border-brand-300 transition-all text-left shadow-xs cursor-pointer active:scale-[0.99]"
+              >
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-brand-50 text-brand-600 border border-brand-200/60 flex items-center justify-center group-hover:scale-105 transition-transform flex-shrink-0">
+                  <FileText className="w-5 h-5 sm:w-6 sm:h-6" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-bold text-slate-900 group-hover:text-brand-700" style={{ fontFamily: 'Outfit, sans-serif' }}>
+                    Baca Dokumen PDF
+                  </div>
+                  <p className="text-[11px] sm:text-xs text-slate-500 mt-0.5 leading-snug">
+                    Panduan tertulis terperinci lengkap dengan tangkapan layar.
+                  </p>
+                </div>
+              </button>
+            </div>
+
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-center text-[11px] text-slate-400 text-center">
+              <span>💡 Anda tetap dapat beralih antara PDF dan Video kapan saja di dalam viewer.</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Dedicated PDF & Video Tutorial Viewer Modal (Renders natively on Canvas / HTML5 Video) */}
       <PdfViewerModal
         selectedPdf={selectedPdf}
         onClose={handleClosePdf}
-        onDownload={handleDownloadPdf}
+        onDownload={handleDownloadFile}
         reviewStatus={reviewStatus}
         reviewSubmitting={reviewSubmitting}
         onReview={handleReviewTutorial}

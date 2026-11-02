@@ -10,7 +10,7 @@ import { optimizePdfBuffer } from '@/lib/pdfOptimizer';
 export async function GET() {
   try {
     const res = await query(
-      'SELECT id, title, category, content, pdf_path, created_at FROM tutorials WHERE is_deleted = FALSE ORDER BY created_at DESC'
+      'SELECT id, title, category, content, pdf_path, video_path, created_at FROM tutorials WHERE is_deleted = FALSE ORDER BY created_at DESC'
     );
 
     const tutorials = res.rows.map(t => ({
@@ -38,9 +38,10 @@ export async function POST(req) {
     const category = formData.get('category');
     const content = formData.get('content');
     const pdfFile = formData.get('pdf_file');
+    const videoFile = formData.get('video_file');
 
     if (!title || !category || !content || !pdfFile) {
-      return NextResponse.json({ detail: 'Semua field wajib diisi' }, { status: 400 });
+      return NextResponse.json({ detail: 'Judul, kategori, deskripsi, dan file PDF wajib diisi' }, { status: 400 });
     }
 
     const tutorialId = crypto.randomUUID();
@@ -61,32 +62,49 @@ export async function POST(req) {
     // Optimize PDF before storage upload to ensure lightweight loading
     const optimizedBuffer = await optimizePdfBuffer(buffer);
 
-    // Run S3 upload and Gemini embedding concurrently to maximize speed
+    // Optional video upload task
+    let videoPromise = Promise.resolve(null);
+    if (videoFile && typeof videoFile.arrayBuffer === 'function' && videoFile.size > 0 && videoFile.name) {
+      const videoExt = videoFile.name.split('.').pop()?.toLowerCase() || 'mp4';
+      const videoStoragePath = `it-support-portal/tutorials/${tutorialId}_video.${videoExt}`;
+      const videoContentType = videoFile.type || `video/${videoExt === 'mov' ? 'quicktime' : videoExt}`;
+
+      videoPromise = (async () => {
+        const videoBuffer = Buffer.from(await videoFile.arrayBuffer());
+        const result = await putObject(videoStoragePath, videoBuffer, videoContentType);
+        return result.path;
+      })();
+    }
+
+    // Run S3 uploads and Gemini embedding concurrently
     let pdfPath = null;
+    let videoPath = null;
     let embedding = null;
 
     try {
-      const [storageResult, embeddingResult] = await Promise.all([
+      const [storageResult, embeddingResult, uploadedVideoPath] = await Promise.all([
         putObject(storagePath, optimizedBuffer, 'application/pdf'),
         embedText(content).catch(embedErr => {
           console.error('Gemini embedding failed, using zero array:', embedErr);
           return null;
-        })
+        }),
+        videoPromise
       ]);
 
       pdfPath = storageResult.path;
       embedding = embeddingResult || new Array(768).fill(0.0);
+      videoPath = uploadedVideoPath || null;
     } catch (uploadErr) {
-      console.error('PDF upload to storage failed:', uploadErr);
-      return NextResponse.json({ detail: 'Gagal mengunggah file PDF ke penyimpanan' }, { status: 500 });
+      console.error('File upload to storage failed:', uploadErr);
+      return NextResponse.json({ detail: 'Gagal mengunggah file ke penyimpanan cloud' }, { status: 500 });
     }
 
     // Save to DB
     const res = await query(`
-      INSERT INTO tutorials (id, title, category, content, pdf_path, embedding, created_by)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
-      RETURNING id, title, category, content, pdf_path, created_at
-    `, [tutorialId, title, category, content, pdfPath, embedding, user.id]);
+      INSERT INTO tutorials (id, title, category, content, pdf_path, video_path, embedding, created_by)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      RETURNING id, title, category, content, pdf_path, video_path, created_at
+    `, [tutorialId, title, category, content, pdfPath, videoPath, embedding, user.id]);
 
     const newTutorial = res.rows[0];
     return NextResponse.json({
