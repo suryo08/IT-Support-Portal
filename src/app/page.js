@@ -329,24 +329,28 @@ const PublicSearchPage = () => {
         </div>
 
         <form onSubmit={handleSearch} className="mb-4">
-          <div className="relative">
-            <Input
-              data-testid="search-input"
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Ketik permasalahan device Anda..."
-              className="bg-white border border-slate-300/80 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 rounded-xl h-11 py-2.5 pl-4 pr-12 text-sm md:text-base w-full shadow-xs transition-all duration-200"
-              style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
-            />
-            <Button
-              data-testid="search-button"
-              type="submit"
-              disabled={loading || !query.trim()}
-              className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-brand-500 text-white hover:bg-brand-600 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer shadow-xs"
-            >
-              {loading ? '...' : <Search className="w-4 h-4" />}
-            </Button>
+          <div className="relative group">
+            {/* Ambient Search Bar Aura */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-brand-400/25 via-sky-300/30 to-brand-500/25 rounded-2xl blur-md opacity-70 group-hover:opacity-100 group-focus-within:opacity-100 group-focus-within:blur-lg transition-all duration-300 pointer-events-none" />
+            <div className="relative">
+              <Input
+                data-testid="search-input"
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Ketik permasalahan device Anda..."
+                className="bg-white/95 backdrop-blur-sm border border-slate-300/85 focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 rounded-xl h-11 py-2.5 pl-4 pr-12 text-sm md:text-base w-full shadow-[0_4px_16px_-4px_rgba(0,106,199,0.08)] transition-all duration-200"
+                style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}
+              />
+              <Button
+                data-testid="search-button"
+                type="submit"
+                disabled={loading || !query.trim()}
+                className="absolute right-1.5 top-1/2 -translate-y-1/2 h-8 w-8 p-0 bg-brand-500 text-white hover:bg-brand-600 rounded-lg flex items-center justify-center transition-all duration-200 cursor-pointer shadow-xs active:scale-95"
+              >
+                {loading ? '...' : <Search className="w-4 h-4" />}
+              </Button>
+            </div>
           </div>
           <div className="mt-1.5 flex items-center justify-between text-xs text-slate-500">
             <span className="flex items-center gap-1.5 text-brand-600 font-semibold bg-brand-50/90 border border-brand-200/60 px-2 py-0.5 rounded text-[11px]">
@@ -354,7 +358,7 @@ const PublicSearchPage = () => {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-brand-500"></span>
               </span>
-              Pencarian Berbasis AI
+              Smart Search
             </span>
           </div>
         </form>
@@ -418,11 +422,14 @@ const PublicSearchPage = () => {
                 <div
                   key={result.id}
                   data-testid={`search-result-${result.id}`}
-                  className="border border-slate-200/90 rounded-xl p-4 md:p-5 hover:border-brand-400 hover:shadow-md hover:shadow-brand-500/5 hover:-translate-y-0.5 transition-all duration-200 bg-white flex flex-col justify-between group cursor-pointer shadow-xs"
+                  className="relative border border-slate-200/90 rounded-2xl p-4 md:p-5 hover:border-brand-400/90 bg-white/95 backdrop-blur-xs flex flex-col justify-between group cursor-pointer shadow-[0_2px_12px_-2px_rgba(15,23,42,0.05),0_1px_3px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_28px_-6px_rgba(0,106,199,0.14)] hover:-translate-y-1 transition-all duration-200 overflow-hidden"
                   onMouseEnter={() => handlePrefetch(result.pdf_path)}
                   onTouchStart={() => handlePrefetch(result.pdf_path)}
                   onClick={() => handleTutorialClick(result)}
                 >
+                  {/* Subtle Top Gradient Accent on Hover */}
+                  <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-transparent via-brand-400/0 to-transparent group-hover:via-brand-500 transition-all duration-300" />
+
                   <div>
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-2.5 min-w-0 flex-1">

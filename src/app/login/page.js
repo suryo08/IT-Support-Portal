@@ -56,7 +56,7 @@ const AdminLoginPage = () => {
           </p>
         </div>
 
-        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-xs">
+        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl p-6 sm:p-8 shadow-[0_8px_30px_-6px_rgba(15,23,42,0.08)]">
           <form onSubmit={handleSubmit} className="space-y-5" data-testid="login-form">
             <div>
               <Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-slate-500" style={{ fontFamily: 'IBM Plex Sans, sans-serif' }}>

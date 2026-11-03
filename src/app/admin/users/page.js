@@ -284,7 +284,7 @@ const UserManagement = () => {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Total Pengguna</p>
@@ -296,7 +296,7 @@ const UserManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Menunggu Persetujuan</p>
@@ -308,7 +308,7 @@ const UserManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Admin Disetujui</p>
@@ -320,7 +320,7 @@ const UserManagement = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-xs">
+          <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-[0_4px_20px_-4px_rgba(15,23,42,0.06)]">
             <CardContent className="p-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Pendaftaran Ditolak</p>
@@ -334,7 +334,7 @@ const UserManagement = () => {
         </div>
 
         {/* Main tabs layout */}
-        <Card className="bg-white border border-slate-200 shadow-sm overflow-hidden">
+        <Card className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl shadow-[0_4px_24px_-4px_rgba(15,23,42,0.06)] overflow-hidden">
           <Tabs defaultValue="pending" className="w-full">
             <div className="px-6 pt-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-4">
               <TabsList className="bg-slate-100 p-1 w-full md:w-auto self-start">

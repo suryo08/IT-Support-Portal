@@ -371,7 +371,7 @@ const AdminDashboard = () => {
         {/* Statistics Cards */}
         {stats && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-brand-50/90 to-brand-100/90 border border-brand-200/80 rounded-2xl p-6 shadow-xs backdrop-blur-xs">
+            <div className="bg-gradient-to-br from-brand-50/90 to-brand-100/90 border border-brand-200/80 rounded-2xl p-6 shadow-[0_4px_20px_-4px_rgba(0,106,199,0.08)] backdrop-blur-xs">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">Total Tutorial</p>
@@ -383,7 +383,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-blue-50/90 to-blue-100/90 border border-blue-200/80 rounded-2xl p-6 shadow-xs backdrop-blur-xs">
+            <div className="bg-gradient-to-br from-blue-50/90 to-blue-100/90 border border-blue-200/80 rounded-2xl p-6 shadow-[0_4px_20px_-4px_rgba(59,130,246,0.08)] backdrop-blur-xs">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-blue-600 uppercase tracking-wider">Kunjungan 7 Hari</p>
@@ -398,7 +398,7 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            <div className="bg-gradient-to-br from-purple-50/90 to-purple-100/90 border border-purple-200/80 rounded-2xl p-6 shadow-xs backdrop-blur-xs">
+            <div className="bg-gradient-to-br from-purple-50/90 to-purple-100/90 border border-purple-200/80 rounded-2xl p-6 shadow-[0_4px_20px_-4px_rgba(168,85,247,0.08)] backdrop-blur-xs">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-semibold text-purple-600 uppercase tracking-wider">Upload 7 Hari</p>
@@ -413,7 +413,7 @@ const AdminDashboard = () => {
         )}
 
         {/* Upload Form */}
-        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl p-6 sm:p-8 mb-8 shadow-xs">
+        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl p-6 sm:p-8 mb-8 shadow-[0_4px_24px_-4px_rgba(15,23,42,0.06)]">
           <h2 className="text-xl font-semibold text-slate-900 mb-6" style={{ fontFamily: 'Outfit, sans-serif' }}>
             Tambah Tutorial Baru
           </h2>
@@ -621,7 +621,7 @@ const AdminDashboard = () => {
         </div>
 
         {/* Tutorials Table */}
-        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs">
+        <div className="bg-white/95 backdrop-blur-xs border border-slate-200/90 rounded-2xl overflow-hidden shadow-[0_4px_24px_-4px_rgba(15,23,42,0.06)]">
           <div className="p-6 border-b border-slate-200 flex items-center justify-between">
             <h2 className="text-xl font-semibold text-slate-900" style={{ fontFamily: 'Outfit, sans-serif' }}>
               Daftar Tutorial ({filteredTutorials.length})
